@@ -1,0 +1,25 @@
+{
+  "name": "coastal-city-viz",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive dashboard for comparing Southeast Asian coastal cities by domestic tourism, nightlife density, walkability, population, and living costs.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "recharts": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3"
+  }
+}
