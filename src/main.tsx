@@ -119,8 +119,8 @@ function App() {
                 dataKey="internationalPct"
                 name="International tourists"
                 unit="%"
-                domain={[0, 80]}
-                ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80]}
+                domain={[0, 40]}
+                ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]}
                 stroke="#94a3b8"
                 label={{ value: 'International tourists in nightlife zone — lower is better', position: 'insideBottom', offset: -24, fill: '#94a3b8', fontSize: 12 }}
               />
