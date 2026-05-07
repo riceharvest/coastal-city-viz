@@ -14,7 +14,7 @@ import {
   YAxis,
   ZAxis,
 } from 'recharts';
-import { MapPin, SlidersHorizontal, Wallet, Users, Footprints, Beer } from 'lucide-react';
+import { Beer, Footprints, MapPin, SlidersHorizontal, Waves } from 'lucide-react';
 import { cities, type City } from './data';
 import './styles.css';
 
@@ -26,14 +26,22 @@ const verdictColors: Record<City['verdict'], string> = {
 };
 
 const countries = ['All', ...Array.from(new Set(cities.map((c) => c.country))).sort()];
-const verdicts = ['All', 'top pick', 'possible', 'weak fit', 'reject'] as const;
+const verdicts = ['Viable only', 'All', 'top pick', 'possible', 'weak fit', 'reject'] as const;
 
 function scoreCity(city: City) {
-  const localScore = city.domesticPct;
-  const densityScore = Math.min(city.densityVsAmsterdamPct, 120) / 1.2;
-  const walkScore = city.walkability * 10;
-  const beachScore = Math.max(0, 100 - city.beachDistanceKm * 35);
-  return Math.round(localScore * 0.35 + densityScore * 0.25 + walkScore * 0.25 + beachScore * 0.15);
+  const lowInternationalScore = 100 - city.internationalPct;
+  const densityScore = Math.min(city.nightlifeDensity / 7, 100);
+  const compactScore = city.nightlifeCompactness * 10;
+  const swimScore = city.swimmability * 10;
+  const beachWalkScore = city.walkability * 10;
+
+  return Math.round(
+    lowInternationalScore * 0.25 +
+      densityScore * 0.25 +
+      compactScore * 0.2 +
+      swimScore * 0.2 +
+      beachWalkScore * 0.1
+  );
 }
 
 function money(value: number) {
@@ -42,37 +50,41 @@ function money(value: number) {
 
 function App() {
   const [country, setCountry] = useState('All');
-  const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
-  const [maxInternational, setMaxInternational] = useState(35);
-  const [minWalkability, setMinWalkability] = useState(1);
-  const [maxCost, setMaxCost] = useState(1600);
+  const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('Viable only');
+  const [maxInternational, setMaxInternational] = useState(40);
+  const [minSwimmability, setMinSwimmability] = useState(5);
+  const [minNightlifeDensity, setMinNightlifeDensity] = useState(250);
 
   const filtered = useMemo(() => {
     return cities
       .filter((c) => country === 'All' || c.country === country)
-      .filter((c) => verdict === 'All' || c.verdict === verdict)
+      .filter((c) =>
+        verdict === 'All' ? true : verdict === 'Viable only' ? c.verdict !== 'reject' : c.verdict === verdict
+      )
       .filter((c) => c.internationalPct <= maxInternational)
-      .filter((c) => c.walkability >= minWalkability)
-      .filter((c) => c.monthlyLocalCostUsd <= maxCost)
+      .filter((c) => c.swimmability >= minSwimmability)
+      .filter((c) => c.nightlifeDensity >= minNightlifeDensity)
       .sort((a, b) => scoreCity(b) - scoreCity(a));
-  }, [country, maxCost, maxInternational, minWalkability, verdict]);
+  }, [country, maxInternational, minNightlifeDensity, minSwimmability, verdict]);
 
   const top = filtered[0];
+  const denseEnough = cities.filter((c) => c.nightlifeDensity >= 250 && c.swimmability >= 5).length;
 
   return (
     <main>
       <section className="hero shell">
-        <div className="eyebrow">SEA coastal city filter</div>
-        <h1>Find local beach cities with real walkable nightlife density.</h1>
+        <div className="eyebrow">SEA vacation spot filter</div>
+        <h1>Find beach vacation spots with dense nightlife and fewer foreigners.</h1>
         <p>
-          Compare domestic tourism %, nightlife density, registered population, local-ish monthly costs,
-          and beach-to-bar walkability. Data is intentionally editable in <code>src/data.ts</code>.
+          Re-audited for the real target: swimmable beaches, most bars/clubs concentrated in one
+          walkable nightlife area, and lower international-tourist share. City-grid false positives
+          now get punished hard.
         </p>
         <div className="heroStats">
-          <Stat icon={<MapPin />} label="cities" value={cities.length.toString()} />
-          <Stat icon={<Beer />} label="Amsterdam ref." value="700/km²" />
-          <Stat icon={<Footprints />} label="best walk" value={top ? `${top.walkability}/10` : '—'} />
-          <Stat icon={<Wallet />} label="cheapest shown" value={filtered.length ? money(Math.min(...filtered.map((c) => c.monthlyLocalCostUsd))) : '—'} />
+          <Stat icon={<MapPin />} label="places audited" value={cities.length.toString()} />
+          <Stat icon={<Beer />} label="dense + swimmable" value={denseEnough.toString()} />
+          <Stat icon={<Waves />} label="best beach" value={top ? `${top.swimmability}/10` : '—'} />
+          <Stat icon={<Footprints />} label="top shown" value={top ? top.city : '—'} />
         </div>
       </section>
 
@@ -81,7 +93,7 @@ function App() {
           <SlidersHorizontal />
           <div>
             <h2>Filters</h2>
-            <p>Default is strict: ≤35% international tourists.</p>
+            <p>Default target: viable places only, ≤40% international, swim score ≥5, nightlife density ≥250/km².</p>
           </div>
         </div>
         <div className="filterGrid">
@@ -101,16 +113,16 @@ function App() {
               ))}
             </select>
           </label>
-          <Range label="Max international %" value={maxInternational} min={5} max={80} step={5} onChange={setMaxInternational} suffix="%" />
-          <Range label="Min walkability" value={minWalkability} min={1} max={10} step={0.5} onChange={setMinWalkability} suffix="/10" />
-          <Range label="Max monthly local cost" value={maxCost} min={400} max={1800} step={50} onChange={setMaxCost} prefix="$" />
+          <Range label="Max international" value={maxInternational} min={0} max={80} step={5} onChange={setMaxInternational} suffix="%" />
+          <Range label="Min swimmability" value={minSwimmability} min={0} max={10} step={0.5} onChange={setMinSwimmability} suffix="/10" />
+          <Range label="Min nightlife density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
         </div>
       </section>
 
       <section className="shell charts">
         <div className="panel chartPanel">
           <h2>International tourists vs nightlife density</h2>
-          <p>Best zone is upper-left: fewer foreigners, denser nightlife. Bubble size = beach-to-bar walkability.</p>
+          <p>Best zone is upper-left: fewer foreigners, denser nightlife. Bubble size = beach swimmability. X-axis focuses on the 0–40% target band.</p>
           <ResponsiveContainer width="100%" height={360}>
             <ScatterChart margin={{ top: 20, right: 28, bottom: 42, left: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,0.08)" />
@@ -123,7 +135,7 @@ function App() {
                 allowDataOverflow
                 ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]}
                 stroke="#94a3b8"
-                label={{ value: 'International tourists in nightlife zone — lower is better', position: 'insideBottom', offset: -24, fill: '#94a3b8', fontSize: 12 }}
+                label={{ value: 'International tourists in vacation core — lower is better', position: 'insideBottom', offset: -24, fill: '#94a3b8', fontSize: 12 }}
               />
               <YAxis
                 type="number"
@@ -134,7 +146,7 @@ function App() {
                 ticks={[0, 150, 300, 450, 600, 750, 900]}
                 stroke="#94a3b8"
               />
-              <ZAxis type="number" dataKey="walkability" range={[70, 260]} />
+              <ZAxis type="number" dataKey="swimmability" range={[70, 260]} />
               <Tooltip content={<CityTooltip />} />
               <Scatter data={filtered}>
                 {filtered.map((entry) => (
@@ -146,20 +158,17 @@ function App() {
         </div>
 
         <div className="panel chartPanel">
-          <h2>Local cost by city</h2>
-          <p>Rough normal solo local-ish monthly baseline, not luxury expat spend.</p>
+          <h2>Beach + nightlife quality</h2>
+          <p>Scores are 1–10. This catches places that are local but too quiet, or dense but not swimmable.</p>
           <ResponsiveContainer width="100%" height={360}>
             <BarChart data={filtered} margin={{ top: 20, right: 20, bottom: 80, left: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,0.08)" />
               <XAxis dataKey="city" angle={-35} textAnchor="end" interval={0} stroke="#94a3b8" height={90} />
-              <YAxis stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} />
               <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12 }} />
               <Legend />
-              <Bar dataKey="monthlyLocalCostUsd" name="Monthly cost USD">
-                {filtered.map((entry) => (
-                  <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
-                ))}
-              </Bar>
+              <Bar dataKey="swimmability" name="Swimmable beach" fill="#38bdf8" />
+              <Bar dataKey="nightlifeCompactness" name="Nightlife compactness" fill="#a78bfa" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -169,7 +178,7 @@ function App() {
         {filtered.map((city, index) => (
           <CityCard key={`${city.city}-${city.district}`} city={city} rank={index + 1} />
         ))}
-        {!filtered.length && <div className="panel empty">No cities match the current filters.</div>}
+        {!filtered.length && <div className="panel empty">No places match the current filters.</div>}
       </section>
     </main>
   );
@@ -222,9 +231,10 @@ function CityTooltip({ active, payload }: any) {
       <strong>{city.city}</strong>
       <span>{city.district}</span>
       <span>International: {city.internationalPct}%</span>
-      <span>Domestic: {city.domesticPct}%</span>
       <span>Density: {city.nightlifeDensity}/km²</span>
-      <span>Walkability: {city.walkability}/10</span>
+      <span>Compactness: {city.nightlifeCompactness}/10</span>
+      <span>Swimmability: {city.swimmability}/10</span>
+      <span>Fit score: {scoreCity(city)}/100</span>
     </div>
   );
 }
@@ -251,18 +261,18 @@ function CityCard({ city, rank }: { city: City; rank: number }) {
         </div>
         <div className="metrics">
           <Metric label="International" value={`${city.internationalPct}%`} />
-          <Metric label="Domestic" value={`${city.domesticPct}%`} />
           <Metric label="Nightlife density" value={`${city.nightlifeDensity}/km²`} />
+          <Metric label="Compactness" value={`${city.nightlifeCompactness}/10`} />
+          <Metric label="Swimmability" value={`${city.swimmability}/10`} />
+          <Metric label="Beach walk" value={`${city.walkability}/10`} />
+          <Metric label="Beach distance" value={`${city.beachDistanceKm}km`} />
           <Metric label="vs Amsterdam" value={`${city.densityVsAmsterdamPct}%`} />
-          <Metric label="Walkability" value={`${city.walkability}/10`} />
-          <Metric label="Population" value={`${city.registeredPopulation.toLocaleString()} (${city.populationYear})`} />
           <Metric label="Monthly cost" value={`${money(city.monthlyLocalCostUsd)} mid`} />
           <Metric label="Cost range" value={`${money(city.monthlyCostRangeUsd[0])}-${money(city.monthlyCostRangeUsd[1])}`} />
-          <Metric label="Beach distance" value={`${city.beachDistanceKm}km`} />
           <Metric label="Fit score" value={`${scoreCity(city)}/100`} />
         </div>
         <details className="evidence">
-          <summary>Evidence + method</summary>
+          <summary>Evidence + audit method</summary>
           <p>{city.densityMethod}</p>
           <div className="sourceLinks">
             {city.sourceUrls.map((url, i) => (
