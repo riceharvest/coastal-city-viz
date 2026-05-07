@@ -28,6 +28,13 @@ const verdictColors: Record<City['verdict'], string> = {
 const countries = ['All', ...Array.from(new Set(cities.map((c) => c.country))).sort()];
 const verdicts = ['Viable only', 'All', 'top pick', 'possible', 'weak fit', 'reject'] as const;
 
+const verdictRank: Record<City['verdict'], number> = {
+  'top pick': 0,
+  possible: 1,
+  'weak fit': 2,
+  reject: 3,
+};
+
 function scoreCity(city: City) {
   const lowInternationalScore = 100 - city.internationalPct;
   const densityScore = Math.min(city.nightlifeDensity / 7, 100);
@@ -64,7 +71,7 @@ function App() {
       .filter((c) => c.internationalPct <= maxInternational)
       .filter((c) => c.swimmability >= minSwimmability)
       .filter((c) => c.nightlifeDensity >= minNightlifeDensity)
-      .sort((a, b) => scoreCity(b) - scoreCity(a));
+      .sort((a, b) => verdictRank[a.verdict] - verdictRank[b.verdict] || scoreCity(b) - scoreCity(a));
   }, [country, maxInternational, minNightlifeDensity, minSwimmability, verdict]);
 
   const top = filtered[0];
