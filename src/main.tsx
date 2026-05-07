@@ -109,14 +109,31 @@ function App() {
 
       <section className="shell charts">
         <div className="panel chartPanel">
-          <h2>Domestic tourism vs nightlife density</h2>
-          <p>Top-right is the target: local crowd + Amsterdam-ish density.</p>
+          <h2>International tourists vs nightlife density</h2>
+          <p>Best zone is upper-left: fewer foreigners, denser nightlife. Bubble size = beach-to-bar walkability.</p>
           <ResponsiveContainer width="100%" height={360}>
-            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+            <ScatterChart margin={{ top: 20, right: 28, bottom: 42, left: 0 }}>
               <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-              <XAxis dataKey="domesticPct" name="Domestic %" unit="%" stroke="#94a3b8" />
-              <YAxis dataKey="nightlifeDensity" name="Density" unit="/km²" stroke="#94a3b8" />
-              <ZAxis dataKey="walkability" range={[80, 260]} />
+              <XAxis
+                type="number"
+                dataKey="internationalPct"
+                name="International tourists"
+                unit="%"
+                domain={[0, 80]}
+                ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80]}
+                stroke="#94a3b8"
+                label={{ value: 'International tourists in nightlife zone — lower is better', position: 'insideBottom', offset: -24, fill: '#94a3b8', fontSize: 12 }}
+              />
+              <YAxis
+                type="number"
+                dataKey="nightlifeDensity"
+                name="Nightlife density"
+                unit="/km²"
+                domain={[0, 900]}
+                ticks={[0, 150, 300, 450, 600, 750, 900]}
+                stroke="#94a3b8"
+              />
+              <ZAxis type="number" dataKey="walkability" range={[70, 260]} />
               <Tooltip content={<CityTooltip />} />
               <Scatter data={filtered}>
                 {filtered.map((entry) => (
@@ -203,6 +220,7 @@ function CityTooltip({ active, payload }: any) {
     <div className="tooltip">
       <strong>{city.city}</strong>
       <span>{city.district}</span>
+      <span>International: {city.internationalPct}%</span>
       <span>Domestic: {city.domesticPct}%</span>
       <span>Density: {city.nightlifeDensity}/km²</span>
       <span>Walkability: {city.walkability}/10</span>
