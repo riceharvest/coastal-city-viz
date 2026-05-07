@@ -50,10 +50,10 @@ function money(value: number) {
 
 function App() {
   const [country, setCountry] = useState('All');
-  const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('Viable only');
-  const [maxInternational, setMaxInternational] = useState(40);
-  const [minSwimmability, setMinSwimmability] = useState(5);
-  const [minNightlifeDensity, setMinNightlifeDensity] = useState(250);
+  const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
+  const [maxInternational, setMaxInternational] = useState(80);
+  const [minSwimmability, setMinSwimmability] = useState(0);
+  const [minNightlifeDensity, setMinNightlifeDensity] = useState(0);
 
   const filtered = useMemo(() => {
     return cities
@@ -81,7 +81,7 @@ function App() {
           now get punished hard.
         </p>
         <div className="heroStats">
-          <Stat icon={<MapPin />} label="places audited" value={cities.length.toString()} />
+          <Stat icon={<MapPin />} label="places shown" value={`${filtered.length}/${cities.length}`} />
           <Stat icon={<Beer />} label="dense + swimmable" value={denseEnough.toString()} />
           <Stat icon={<Waves />} label="best beach" value={top ? `${top.swimmability}/10` : '—'} />
           <Stat icon={<Footprints />} label="top shown" value={top ? top.city : '—'} />
@@ -93,7 +93,7 @@ function App() {
           <SlidersHorizontal />
           <div>
             <h2>Filters</h2>
-            <p>Default target: viable places only, ≤40% international, swim score ≥5, nightlife density ≥250/km².</p>
+            <p>Default view shows all 28 audited places. Tighten filters to find the actual target band.</p>
           </div>
         </div>
         <div className="filterGrid">
