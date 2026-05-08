@@ -35,6 +35,7 @@ The visitor-mix fields were re-audited after the initial scouting pass:
 - Use city/province official visitor splits when accessible.
 - When only province/state totals exist, estimate the nightlife-zone split and mark confidence lower.
 - Nightlife density, bars-within-walk, and cluster radius remain structured estimates, not a scraped POI census.
+- A parallel regional verification pass is documented in `plans/parallel-data-verification-2026-05-08.md`.
 
 So: better than the first pass, still not a paid-market-data audit.
 
