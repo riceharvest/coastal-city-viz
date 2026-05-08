@@ -31,7 +31,7 @@ h1 { font-size: clamp(40px, 7vw, 82px); line-height: 0.92; letter-spacing: -0.06
 h2, h3, p { margin: 0; }
 h2 { font-size: 22px; letter-spacing: -0.03em; }
 .sectionTitle p, .chartPanel p { color: #94a3b8; margin-top: 4px; }
-.filterGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.filterGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 label { color: #cbd5e1; display: grid; gap: 8px; font-size: 13px; }
 select { height: 44px; color: #e5e7eb; background: #0f172a; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 0 12px; }
 .rangeHeader { display: flex; justify-content: space-between; gap: 10px; }
@@ -40,6 +40,7 @@ input[type='range'] { width: 100%; accent-color: #38bdf8; }
 
 .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
 .chartPanel { padding: 22px; min-width: 0; }
+.chartPanelWide { grid-column: 1 / -1; }
 .tooltip { display: grid; gap: 4px; padding: 12px; background: #0f172a; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; box-shadow: 0 16px 50px rgba(0,0,0,0.35); }
 .tooltip span { color: #cbd5e1; font-size: 13px; }
 
