@@ -137,7 +137,7 @@ function App() {
           <SlidersHorizontal />
           <div>
             <h2>Filters</h2>
-            <p>Default view shows all 28 audited places. Tighten filters to find the actual target band.</p>
+            <p>{`Default view shows all ${cities.length} audited places. Tighten filters to find the actual target band.`}</p>
           </div>
         </div>
         <div className="filterGrid">

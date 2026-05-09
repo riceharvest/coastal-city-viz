@@ -1,3 +1,102 @@
+export type Confidence = 'low' | 'medium' | 'high';
+
+// Future vacation-reality metrics may be absent. Missing/unknown values should render as `—`, never as numeric zero.
+export type SourceRecord = {
+  id: string;
+  url: string;
+  title?: string;
+  publisher?: string;
+  accessedAt: string;
+  sourceType:
+    | 'official-tourism'
+    | 'official-statistics'
+    | 'official-advisory'
+    | 'weather-api'
+    | 'marine-api'
+    | 'airport-open-data'
+    | 'osm-overpass'
+    | 'wikidata-sparql'
+    | 'unesco'
+    | 'booking-sample'
+    | 'hotel-official'
+    | 'route-source'
+    | 'crowd-proxy'
+    | 'editorial-proxy'
+    | 'manual-note';
+  supportsFields: string[];
+  publishedAt?: string;
+  confidence?: Confidence;
+  notes?: string;
+};
+
+export type SeasonalityMetrics = {
+  peakMonths?: string[];
+  shoulderMonths?: string[];
+  lowMonths?: string[];
+  rainyMonths?: string[];
+  bestMonths?: string[];
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
+export type ArrivalMetrics = {
+  nearestAirport?: string;
+  airportDistanceKm?: number;
+  airportTransferMinutes?: number;
+  trainAccess?: string;
+  busAccess?: string;
+  ferryAccess?: string;
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
+export type AccommodationMetrics = {
+  typicalMonthlyRentUsd?: number;
+  monthlyRentRangeUsd?: [number, number];
+  hotelNightlyRangeUsd?: [number, number];
+  shortStaySupplyScore?: number;
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
+export type OsmPoiMetrics = {
+  bbox?: [number, number, number, number];
+  bars?: number;
+  restaurants?: number;
+  cafes?: number;
+  clubs?: number;
+  convenienceStores?: number;
+  pharmacies?: number;
+  poiDensityPerKm2?: number;
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
+export type NoiseChaosMetrics = {
+  nightlifeNoiseScore?: number;
+  trafficChaosScore?: number;
+  crowdingScore?: number;
+  constructionScore?: number;
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
+export type DayTripMetrics = {
+  notableTrips?: string[];
+  islandTrips?: string[];
+  natureTrips?: string[];
+  culturalTrips?: string[];
+  averageTravelMinutes?: number;
+  notes?: string;
+  confidence?: Confidence;
+  sourceIds?: string[];
+};
+
 export type City = {
   city: string;
   country: string;
@@ -24,11 +123,18 @@ export type City = {
   monthlyLocalCostUsd: number; // normal solo local-ish monthly baseline, secondary metric only
   monthlyCostRangeUsd: [number, number];
   beachDistanceKm: number;
-  confidence: 'low' | 'medium' | 'high';
+  confidence: Confidence;
   verdict: 'top pick' | 'possible' | 'weak fit' | 'reject';
   tags: string[];
   notes: string;
   sourceUrls: string[];
+  seasonality?: SeasonalityMetrics;
+  arrival?: ArrivalMetrics;
+  accommodation?: AccommodationMetrics;
+  osmPoiMetrics?: OsmPoiMetrics;
+  noiseChaosMetrics?: NoiseChaosMetrics;
+  dayTripMetrics?: DayTripMetrics;
+  sources?: SourceRecord[];
 };
 
 export const AMSTERDAM_REFERENCE_DENSITY = 700;
