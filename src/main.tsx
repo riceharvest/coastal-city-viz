@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { Beer, Footprints, MapPin, SlidersHorizontal, Waves } from 'lucide-react';
 import { cities, type City } from './data';
+import { vacationDataByKey, type VacationRecord } from './vacationData';
 import './styles.css';
 
 const verdictColors: Record<City['verdict'], string> = {
@@ -76,6 +77,42 @@ function money(value: number) {
   return `$${value.toLocaleString()}`;
 }
 
+const months = ['Any', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+type TripMonth = (typeof months)[number];
+
+function vacationKey(city: City) {
+  return `${city.country}::${city.city}::${city.district}`;
+}
+
+function getVacation(city: City) {
+  return vacationDataByKey[vacationKey(city)];
+}
+
+function selectedMonth(vacation: VacationRecord | undefined, month: TripMonth) {
+  if (!vacation || month === 'Any') return undefined;
+  return vacation.seasonality.monthly.find((entry) => entry.label === month);
+}
+
+function passesMinKnown(value: number | undefined | null, min: number) {
+  return value == null ? true : value >= min;
+}
+
+function passesMaxKnown(value: number | undefined | null, max: number) {
+  return value == null ? true : value <= max;
+}
+
+function formatNumber(value: number | null | undefined, suffix = '') {
+  return value == null || !Number.isFinite(value) ? '—' : `${value}${suffix}`;
+}
+
+function formatMoney(value: number | null | undefined) {
+  return value == null || !Number.isFinite(value) ? '—' : `$${value.toLocaleString()}`;
+}
+
+function formatMonths(values: string[] | undefined) {
+  return values?.length ? values.join(', ') : '—';
+}
+
 function App() {
   const [country, setCountry] = useState('All');
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
@@ -85,6 +122,12 @@ function App() {
   const [maxClusterRadius, setMaxClusterRadius] = useState(3500);
   const [minLateNightVenues, setMinLateNightVenues] = useState(0);
   const [minNightlifeDensity, setMinNightlifeDensity] = useState(0);
+  const [tripMonth, setTripMonth] = useState<TripMonth>('Any');
+  const [minVacationReliability, setMinVacationReliability] = useState(0);
+  const [maxArrivalFriction, setMaxArrivalFriction] = useState(100);
+  const [maxNoiseChaos, setMaxNoiseChaos] = useState(100);
+  const [minFoodCafeDensity, setMinFoodCafeDensity] = useState(0);
+  const [minDayTripScore, setMinDayTripScore] = useState(0);
 
   const filtered = useMemo(() => {
     return cities
@@ -98,6 +141,20 @@ function App() {
       .filter((c) => c.barClusterRadiusMeters <= maxClusterRadius)
       .filter((c) => c.lateNightVenuesCount >= minLateNightVenues)
       .filter((c) => c.nightlifeDensity >= minNightlifeDensity)
+      .filter((c) => {
+        const vacation = getVacation(c);
+        const month = selectedMonth(vacation, tripMonth);
+        const reliability = tripMonth === 'Any'
+          ? Math.max(...(vacation?.seasonality.monthly.map((entry) => entry.vacationReliabilityScore) ?? [0]))
+          : month?.vacationReliabilityScore;
+        return (
+          passesMinKnown(reliability, minVacationReliability) &&
+          passesMaxKnown(vacation?.arrival.arrivalFrictionScore, maxArrivalFriction) &&
+          passesMaxKnown(vacation?.noiseChaosMetrics.noiseChaosScore, maxNoiseChaos) &&
+          passesMinKnown(vacation?.osmPoiMetrics.foodCafeDensityPerKm2, minFoodCafeDensity) &&
+          passesMinKnown(vacation?.dayTripMetrics.dayTripScore, minDayTripScore)
+        );
+      })
       .sort((a, b) => verdictRank[a.verdict] - verdictRank[b.verdict] || scoreCity(b) - scoreCity(a));
   }, [
     country,
@@ -105,6 +162,12 @@ function App() {
     maxInternational,
     minLateNightVenues,
     minNightlifeDensity,
+    minVacationReliability,
+    maxArrivalFriction,
+    maxNoiseChaos,
+    minFoodCafeDensity,
+    minDayTripScore,
+    tripMonth,
     minSwimmability,
     minWaterCleanliness,
     verdict,
@@ -112,7 +175,18 @@ function App() {
 
   const top = filtered[0];
   const denseEnough = cities.filter((c) => c.nightlifeDensity >= 250 && c.swimmability >= 5).length;
-  const cleanWaterCount = cities.filter((c) => c.waterCleanlinessScore >= 6).length;
+  const vacationRecordsShown = filtered.map(getVacation).filter(Boolean) as VacationRecord[];
+  const reliableCount = vacationRecordsShown.filter((v) => {
+    const month = selectedMonth(v, tripMonth);
+    const score = tripMonth === 'Any'
+      ? Math.max(...v.seasonality.monthly.map((entry) => entry.vacationReliabilityScore))
+      : month?.vacationReliabilityScore ?? 0;
+    return score >= 75;
+  }).length;
+  const heatmapCities = filtered.slice(0, 12).map((city) => ({ city, vacation: getVacation(city) })).filter((item) => item.vacation);
+  const arrivalChart = filtered
+    .map((city) => ({ ...city, arrivalFrictionScore: getVacation(city)?.arrival.arrivalFrictionScore }))
+    .filter((city) => city.arrivalFrictionScore != null);
 
   return (
     <main>
@@ -127,7 +201,7 @@ function App() {
         <div className="heroStats">
           <Stat icon={<MapPin />} label="places shown" value={`${filtered.length}/${cities.length}`} />
           <Stat icon={<Beer />} label="dense + swimmable" value={denseEnough.toString()} />
-          <Stat icon={<Waves />} label="clean water ≥6" value={cleanWaterCount.toString()} />
+          <Stat icon={<Waves />} label={tripMonth === 'Any' ? 'reliable months' : `reliable in ${tripMonth}`} value={reliableCount.toString()} />
           <Stat icon={<Footprints />} label="top shown" value={top ? top.city : '—'} />
         </div>
       </section>
@@ -163,6 +237,19 @@ function App() {
           <Range label="Max bar radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
           <Range label="Min late venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
           <Range label="Min nightlife density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
+          <label>
+            Trip month
+            <select value={tripMonth} onChange={(e) => setTripMonth(e.target.value as TripMonth)}>
+              {months.map((month) => (
+                <option key={month}>{month}</option>
+              ))}
+            </select>
+          </label>
+          <Range label="Min vacation reliability" value={minVacationReliability} min={0} max={100} step={5} onChange={setMinVacationReliability} suffix="/100" />
+          <Range label="Max arrival friction" value={maxArrivalFriction} min={0} max={100} step={5} onChange={setMaxArrivalFriction} suffix="/100" />
+          <Range label="Max noise / chaos" value={maxNoiseChaos} min={0} max={100} step={5} onChange={setMaxNoiseChaos} suffix="/100" />
+          <Range label="Min food+cafe density" value={minFoodCafeDensity} min={0} max={200} step={5} onChange={setMinFoodCafeDensity} suffix="/km²" />
+          <Range label="Min day-trip proxy" value={minDayTripScore} min={0} max={100} step={5} onChange={setMinDayTripScore} suffix="/100" />
         </div>
       </section>
 
@@ -237,6 +324,47 @@ function App() {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+        <div className="panel chartPanel chartPanelWide">
+          <h2>Monthly vacation reliability</h2>
+          <p>Open-Meteo weather + marine proxy by month. Shows the first 12 filtered places to keep the heatmap readable.</p>
+          <div className="heatmap">
+            <div className="heatmapHeader"><span />{months.slice(1).map((month) => <b key={month}>{month}</b>)}</div>
+            {heatmapCities.map(({ city, vacation }) => (
+              <div className="heatmapRow" key={city.city}>
+                <strong>{city.city}</strong>
+                {vacation!.seasonality.monthly.map((month) => (
+                  <span
+                    key={month.label}
+                    className="heatmapCell"
+                    style={{ background: reliabilityColor(month.vacationReliabilityScore) }}
+                    title={`${city.city} ${month.label}: ${month.vacationReliabilityScore}/100, rain ${month.rainyDaysPct}%, wave P90 ${formatNumber(month.waveHeightMaxP90M, 'm')}`}
+                  >
+                    {month.vacationReliabilityScore}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="panel chartPanel chartPanelWide">
+          <h2>Arrival friction vs fit score</h2>
+          <p>Airport-distance + country advisory proxy. Transfer minutes and direct flights stay unknown until route-specific sources are added.</p>
+          <ResponsiveContainer width="100%" height={340}>
+            <ScatterChart margin={{ top: 20, right: 28, bottom: 42, left: 0 }}>
+              <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+              <XAxis type="number" dataKey={(city) => scoreCity(city as City)} name="Fit score" domain={[0, 100]} stroke="#94a3b8" />
+              <YAxis type="number" dataKey="arrivalFrictionScore" name="Arrival friction" domain={[0, 100]} stroke="#94a3b8" />
+              <Tooltip content={<ArrivalTooltip />} />
+              <Scatter data={arrivalChart}>
+                {arrivalChart.map((entry) => (
+                  <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
+                ))}
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
       </section>
 
       <section className="shell list">
@@ -307,7 +435,31 @@ function CityTooltip({ active, payload }: any) {
   );
 }
 
+function reliabilityColor(score: number) {
+  if (score >= 80) return 'rgba(34, 197, 94, 0.78)';
+  if (score >= 65) return 'rgba(56, 189, 248, 0.72)';
+  if (score >= 50) return 'rgba(245, 158, 11, 0.72)';
+  return 'rgba(239, 68, 68, 0.72)';
+}
+
+function ArrivalTooltip({ active, payload }: any) {
+  if (!active || !payload?.[0]?.payload) return null;
+  const city: City = payload[0].payload;
+  const vacation = getVacation(city);
+  return (
+    <div className="tooltip">
+      <strong>{city.city}</strong>
+      <span>Fit score: {scoreCity(city)}/100</span>
+      <span>Arrival friction: {formatNumber(vacation?.arrival.arrivalFrictionScore, '/100')}</span>
+      <span>Airport: {vacation?.arrival.nearestAirport ?? '—'} · {formatNumber(vacation?.arrival.airportDistanceKm, 'km')}</span>
+      <span>Safety: {vacation?.arrival.safetyAdvisory?.label ?? '—'}</span>
+    </div>
+  );
+}
+
 function CityCard({ city, rank }: { city: City; rank: number }) {
+  const vacation = getVacation(city);
+  const bestMonth = vacation?.seasonality.monthly.reduce((best, month) => month.vacationReliabilityScore > best.vacationReliabilityScore ? month : best, vacation.seasonality.monthly[0]);
   return (
     <article className="panel cityCard" style={{ borderColor: `${verdictColors[city.verdict]}55` }}>
       <div className="rank">#{rank}</div>
@@ -344,11 +496,53 @@ function CityCard({ city, rank }: { city: City; rank: number }) {
           <Metric label="Monthly cost" value={`${money(city.monthlyLocalCostUsd)} mid`} />
           <Metric label="Fit score" value={`${scoreCity(city)}/100`} />
         </div>
+        {vacation && (
+          <section className="vacationSection">
+            <div className="vacationHeader">
+              <h4>Vacation reality</h4>
+              <span>generated {vacation.seasonality.generatedAt}</span>
+            </div>
+            <div className="metrics vacationGrid">
+              <Metric label="Best months" value={formatMonths(vacation.seasonality.bestMonths)} />
+              <Metric label="Avoid months" value={formatMonths(vacation.seasonality.avoidMonths)} />
+              <Metric label="Best month score" value={bestMonth ? `${bestMonth.label} ${bestMonth.vacationReliabilityScore}/100` : '—'} />
+              <Metric label="Rainy days best" value={formatNumber(bestMonth?.rainyDaysPct, '%')} />
+              <Metric label="Wave P90 best" value={formatNumber(bestMonth?.waveHeightMaxP90M, 'm')} />
+              <Metric label="Sea temp best" value={formatNumber(bestMonth?.seaSurfaceTempMeanC, '°C')} />
+              <Metric label="Nearest airport" value={`${vacation.arrival.nearestAirport} · ${vacation.arrival.airportDistanceKm}km`} />
+              <Metric label="Arrival friction" value={formatNumber(vacation.arrival.arrivalFrictionScore, '/100')} />
+              <Metric label="Safety advisory" value={vacation.arrival.safetyAdvisory?.level ? `US L${vacation.arrival.safetyAdvisory.level}` : '—'} />
+              <Metric label="Transfer time" value="— route source needed" />
+              <Metric label="Monthly cost proxy" value={formatMoney(vacation.accommodation.monthlyCostProxyUsd)} />
+              <Metric label="Accommodation supply" value={formatNumber(vacation.accommodation.accommodationSupplyScore, '/100')} />
+              <Metric label="Hotel nightly" value="— manual sample needed" />
+              <Metric label="Food+cafe density" value={formatNumber(vacation.osmPoiMetrics.foodCafeDensityPerKm2, '/km²')} />
+              <Metric label="Bar/pub/club density" value={formatNumber(vacation.osmPoiMetrics.barPubClubDensityPerKm2, '/km²')} />
+              <Metric label="Noise / chaos proxy" value={formatNumber(vacation.noiseChaosMetrics.noiseChaosScore, '/100')} />
+              <Metric label="Quietness proxy" value={formatNumber(vacation.noiseChaosMetrics.quietnessScore, '/100')} />
+              <Metric label="Day-trip proxy" value={formatNumber(vacation.dayTripMetrics.dayTripScore, '/100')} />
+            </div>
+          </section>
+        )}
         <details className="evidence">
           <summary>Evidence + audit method</summary>
           <p>{city.densityMethod}</p>
           <p><strong>Beach audit:</strong> {city.beachAudit}</p>
           <p><strong>Nightlife audit:</strong> {city.nightlifeAudit}</p>
+          {vacation && (
+            <>
+              <p><strong>Vacation data:</strong> Weather/marine from Open-Meteo 2021–2025; coordinates from OSM Nominatim; airport from OurAirports; POI/accommodation/noise proxies from OSM Overpass; safety level from US State Dept country advisory. Hotel nightly prices, transfer minutes, direct flights, and passport-specific visa rules stay unknown until sourced.</p>
+              <div className="sourceLinks">
+                <a href={vacation.coordinate.sourceUrl} target="_blank" rel="noreferrer">coordinate</a>
+                <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noreferrer">Open-Meteo weather</a>
+                <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noreferrer">Open-Meteo marine</a>
+                <a href="https://ourairports.com/data/" target="_blank" rel="noreferrer">OurAirports</a>
+                <a href="https://wiki.openstreetmap.org/wiki/Overpass_API" target="_blank" rel="noreferrer">OSM Overpass</a>
+                <a href={vacation.arrival.safetyAdvisory.sourceUrl} target="_blank" rel="noreferrer">US advisory</a>
+                <a href={vacation.arrival.visa.gbSourceUrl} target="_blank" rel="noreferrer">GB entry rules</a>
+              </div>
+            </>
+          )}
           <div className="sourceLinks">
             {city.sourceUrls.map((url, i) => (
               <a key={url} href={url} target="_blank" rel="noreferrer">source {i + 1}</a>
