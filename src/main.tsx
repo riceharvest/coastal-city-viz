@@ -39,6 +39,7 @@ const verdictColors: Record<City['verdict'], string> = {
 
 const countries = ['All', ...Array.from(new Set(cities.map((c) => c.country))).sort()];
 const verdicts = ['Viable only', 'All', 'top pick', 'possible', 'weak fit', 'reject'] as const;
+const locationTypes = ['All', 'Island Only', 'Mainland Only'] as const;
 
 const verdictRank: Record<City['verdict'], number> = {
   'top pick': 0,
@@ -152,6 +153,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [country, setCountry] = useState('All');
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
+  const [locationType, setLocationType] = useState<(typeof locationTypes)[number]>('All');
   const [maxInternational, setMaxInternational] = useState(80);
   const [minSwimmability, setMinSwimmability] = useState(0);
   const [maxAirportDistance, setMaxAirportDistance] = useState(200);
@@ -159,6 +161,10 @@ function App() {
 
   // Advanced Drawer Filters
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [maxMonthlyCost, setMaxMonthlyCost] = useState(1500);
+  const [minWalkability, setMinWalkability] = useState(0);
+  const [minBarsWithin10Walk, setMinBarsWithin10Walk] = useState(0);
+  const [minEveningBeachLife, setMinEveningBeachLife] = useState(0);
   const [minWaterCleanliness, setMinWaterCleanliness] = useState(0);
   const [maxClusterRadius, setMaxClusterRadius] = useState(3500);
   const [minLateNightVenues, setMinLateNightVenues] = useState(0);
@@ -173,10 +179,15 @@ function App() {
     setSearchQuery('');
     setCountry('All');
     setVerdict('All');
+    setLocationType('All');
     setMaxInternational(80);
     setMinSwimmability(0);
     setMaxAirportDistance(200);
     setTripMonth('Any');
+    setMaxMonthlyCost(1500);
+    setMinWalkability(0);
+    setMinBarsWithin10Walk(0);
+    setMinEveningBeachLife(0);
     setMinWaterCleanliness(0);
     setMaxClusterRadius(3500);
     setMinLateNightVenues(0);
@@ -190,6 +201,11 @@ function App() {
 
   const activeAdvancedCount = useMemo(() => {
     let count = 0;
+    if (maxAirportDistance < 200) count++;
+    if (maxMonthlyCost < 1500) count++;
+    if (minWalkability > 0) count++;
+    if (minBarsWithin10Walk > 0) count++;
+    if (minEveningBeachLife > 0) count++;
     if (minWaterCleanliness > 0) count++;
     if (maxClusterRadius < 3500) count++;
     if (minLateNightVenues > 0) count++;
@@ -201,6 +217,11 @@ function App() {
     if (minDayTripScore > 0) count++;
     return count;
   }, [
+    maxAirportDistance,
+    maxMonthlyCost,
+    minWalkability,
+    minBarsWithin10Walk,
+    minEveningBeachLife,
     minWaterCleanliness,
     maxClusterRadius,
     minLateNightVenues,
@@ -229,8 +250,18 @@ function App() {
       .filter((c) =>
         verdict === 'All' ? true : verdict === 'Viable only' ? c.verdict !== 'reject' : c.verdict === verdict
       )
+      .filter((c) => {
+        const isIsland = c.tags.includes('island');
+        if (locationType === 'Island Only') return isIsland;
+        if (locationType === 'Mainland Only') return !isIsland;
+        return true;
+      })
       .filter((c) => c.internationalPct <= maxInternational)
       .filter((c) => c.swimmability >= minSwimmability)
+      .filter((c) => c.monthlyLocalCostUsd <= maxMonthlyCost)
+      .filter((c) => c.walkability >= minWalkability)
+      .filter((c) => c.barsWithin10MinWalk >= minBarsWithin10Walk)
+      .filter((c) => c.eveningBeachLifeScore >= minEveningBeachLife)
       .filter((c) => passesMaxKnown(getVacation(c)?.arrival.airportDistanceKm, maxAirportDistance))
       .filter((c) => c.waterCleanlinessScore >= minWaterCleanliness)
       .filter((c) => c.barClusterRadiusMeters <= maxClusterRadius)
@@ -255,8 +286,13 @@ function App() {
     searchQuery,
     country,
     verdict,
+    locationType,
     maxInternational,
     minSwimmability,
+    maxMonthlyCost,
+    minWalkability,
+    minBarsWithin10Walk,
+    minEveningBeachLife,
     maxAirportDistance,
     minWaterCleanliness,
     maxClusterRadius,
@@ -374,6 +410,15 @@ function App() {
           </div>
 
           <div className="filterGroup">
+            <label>Location</label>
+            <select className="selectInput" value={locationType} onChange={(e) => setLocationType(e.target.value as typeof locationType)}>
+              {locationTypes.map((loc) => (
+                <option key={loc}>{loc}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filterGroup">
             <label>Trip Month</label>
             <select className="selectInput" value={tripMonth} onChange={(e) => setTripMonth(e.target.value as TripMonth)}>
               {months.map((m) => (
@@ -420,7 +465,11 @@ function App() {
 
         {showAdvanced && (
           <div className="advancedDrawer">
+            <RangeFilter label="Max Monthly Budget" value={maxMonthlyCost} min={400} max={1500} step={50} onChange={setMaxMonthlyCost} prefix="$" />
+            <RangeFilter label="Min Beach Walkability" value={minWalkability} min={0} max={10} step={0.5} onChange={setMinWalkability} suffix="/10" />
             <RangeFilter label="Max Airport Distance" value={maxAirportDistance} min={10} max={200} step={10} onChange={setMaxAirportDistance} suffix="km" />
+            <RangeFilter label="Min 10m-Walk Bars" value={minBarsWithin10Walk} min={0} max={60} step={5} onChange={setMinBarsWithin10Walk} />
+            <RangeFilter label="Min Evening Beach Life" value={minEveningBeachLife} min={0} max={10} step={0.5} onChange={setMinEveningBeachLife} suffix="/10" />
             <RangeFilter label="Min Clean Water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
             <RangeFilter label="Max Bar Cluster Radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
             <RangeFilter label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
@@ -622,6 +671,7 @@ function RangeFilter({
   max,
   step,
   onChange,
+  prefix = '',
   suffix = '',
 }: {
   label: string;
@@ -630,12 +680,13 @@ function RangeFilter({
   max: number;
   step: number;
   onChange: (v: number) => void;
+  prefix?: string;
   suffix?: string;
 }) {
   return (
     <div className="filterGroup">
       <label>
-        {label} <span className="val">{value}{suffix}</span>
+        {label} <span className="val">{prefix}{value}{suffix}</span>
       </label>
       <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
     </div>
