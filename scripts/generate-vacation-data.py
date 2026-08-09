@@ -60,6 +60,18 @@ ALIASES = {
     'Phuket': 'Patong Phuket',
     'Langkawi': 'Pantai Cenang Langkawi',
     'George Town': 'George Town Penang',
+    'Krabi': 'Ao Nang, Krabi',
+    'Koh Phangan': 'Ko Pha Ngan',
+    'Koh Chang': 'Ko Chang',
+    'Mui Ne': 'Mui Ne',
+    'Quy Nhon': 'Quy Nhon',
+    'Boracay': 'Boracay',
+    'San Juan (La Union)': 'San Juan, La Union',
+    'El Nido': 'El Nido, Palawan',
+    'Gili Trawangan': 'Gili Trawangan',
+    'Perhentian Islands': 'Perhentian Islands',
+    'Batam': 'Nagoya, Batam',
+    'Pangkor Island': 'Pangkor Island',
 }
 
 def slug(s):

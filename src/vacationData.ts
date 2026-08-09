@@ -265,7 +265,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -335,7 +335,7 @@ export const vacationData = [
       "quietnessScore": 38,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 31,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -625,7 +625,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -695,7 +695,7 @@ export const vacationData = [
       "quietnessScore": 33,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 38,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -985,7 +985,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -1055,7 +1055,7 @@ export const vacationData = [
       "quietnessScore": 53,
       "trafficChaosScore": 98,
       "crowdingProxyScore": 7,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -1345,7 +1345,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -1415,7 +1415,7 @@ export const vacationData = [
       "quietnessScore": 43,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 20,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -1705,7 +1705,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -1775,7 +1775,7 @@ export const vacationData = [
       "quietnessScore": 38,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 28,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -2065,7 +2065,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -2135,7 +2135,7 @@ export const vacationData = [
       "quietnessScore": 32,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 55,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -2423,7 +2423,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -2493,7 +2493,7 @@ export const vacationData = [
       "quietnessScore": 47,
       "trafficChaosScore": 95,
       "crowdingProxyScore": 8,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -2782,7 +2782,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -2852,7 +2852,7 @@ export const vacationData = [
       "quietnessScore": 34,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 46,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -3142,7 +3142,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -3212,7 +3212,7 @@ export const vacationData = [
       "quietnessScore": 76,
       "trafficChaosScore": 53,
       "crowdingProxyScore": 0,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -3501,7 +3501,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -3571,7 +3571,7 @@ export const vacationData = [
       "quietnessScore": 59,
       "trafficChaosScore": 88,
       "crowdingProxyScore": 5,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -3860,7 +3860,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -3930,7 +3930,7 @@ export const vacationData = [
       "quietnessScore": 50,
       "trafficChaosScore": 96,
       "crowdingProxyScore": 1,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -4220,7 +4220,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -4290,7 +4290,7 @@ export const vacationData = [
       "quietnessScore": 26,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 24,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -4580,7 +4580,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -4650,7 +4650,7 @@ export const vacationData = [
       "quietnessScore": 51,
       "trafficChaosScore": 97,
       "crowdingProxyScore": 10,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -4940,7 +4940,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -5010,7 +5010,7 @@ export const vacationData = [
       "quietnessScore": 15,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 43,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -5300,7 +5300,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -5370,7 +5370,7 @@ export const vacationData = [
       "quietnessScore": 56,
       "trafficChaosScore": 94,
       "crowdingProxyScore": 8,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -5660,7 +5660,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -5730,7 +5730,7 @@ export const vacationData = [
       "quietnessScore": 46,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 21,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -6019,7 +6019,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -6089,7 +6089,7 @@ export const vacationData = [
       "quietnessScore": 61,
       "trafficChaosScore": 87,
       "crowdingProxyScore": 1,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -6378,7 +6378,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -6448,7 +6448,7 @@ export const vacationData = [
       "quietnessScore": 54,
       "trafficChaosScore": 98,
       "crowdingProxyScore": 5,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -6738,7 +6738,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -6808,7 +6808,7 @@ export const vacationData = [
       "quietnessScore": 55,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 0,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -7097,7 +7097,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -7167,7 +7167,7 @@ export const vacationData = [
       "quietnessScore": 54,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 4,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -7456,7 +7456,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -7526,7 +7526,7 @@ export const vacationData = [
       "quietnessScore": 33,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 47,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -7816,7 +7816,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -7886,7 +7886,7 @@ export const vacationData = [
       "quietnessScore": 29,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 38,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -8176,7 +8176,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -8246,7 +8246,7 @@ export const vacationData = [
       "quietnessScore": 58,
       "trafficChaosScore": 90,
       "crowdingProxyScore": 7,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -8536,7 +8536,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -8606,7 +8606,7 @@ export const vacationData = [
       "quietnessScore": 61,
       "trafficChaosScore": 69,
       "crowdingProxyScore": 6,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "low",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 5000m radius; depends on OSM completeness and generated coordinate quality."
@@ -8895,7 +8895,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -8965,7 +8965,7 @@ export const vacationData = [
       "quietnessScore": 39,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 37,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -9253,7 +9253,7 @@ export const vacationData = [
           "marineDataStatus": "unavailable"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -9323,7 +9323,7 @@ export const vacationData = [
       "quietnessScore": 41,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 38,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -9613,7 +9613,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -9683,7 +9683,7 @@ export const vacationData = [
       "quietnessScore": 46,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 45,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -9973,7 +9973,7 @@ export const vacationData = [
           "marineDataStatus": "unavailable"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -10043,7 +10043,7 @@ export const vacationData = [
       "quietnessScore": 15,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 76,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -10331,7 +10331,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -10401,7 +10401,7 @@ export const vacationData = [
       "quietnessScore": 54,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 7,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -10691,7 +10691,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -10761,7 +10761,7 @@ export const vacationData = [
       "quietnessScore": 49,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 22,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -11051,7 +11051,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -11121,7 +11121,7 @@ export const vacationData = [
       "quietnessScore": 55,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 0,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -11409,7 +11409,7 @@ export const vacationData = [
           "marineDataStatus": "unavailable"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -11479,7 +11479,7 @@ export const vacationData = [
       "quietnessScore": 46,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 26,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -11769,7 +11769,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -11839,7 +11839,7 @@ export const vacationData = [
       "quietnessScore": 48,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 34,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -12127,7 +12127,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -12197,7 +12197,7 @@ export const vacationData = [
       "quietnessScore": 62,
       "trafficChaosScore": 80,
       "crowdingProxyScore": 9,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -12485,7 +12485,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -12555,7 +12555,7 @@ export const vacationData = [
       "quietnessScore": 65,
       "trafficChaosScore": 76,
       "crowdingProxyScore": 2,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."
@@ -12844,7 +12844,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -12914,7 +12914,7 @@ export const vacationData = [
       "quietnessScore": 61,
       "trafficChaosScore": 87,
       "crowdingProxyScore": 0,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -13203,7 +13203,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -13273,7 +13273,7 @@ export const vacationData = [
       "quietnessScore": 51,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 18,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -13562,7 +13562,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -13632,7 +13632,7 @@ export const vacationData = [
       "quietnessScore": 40,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 37,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -13922,7 +13922,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -13992,7 +13992,7 @@ export const vacationData = [
       "quietnessScore": 46,
       "trafficChaosScore": 100,
       "crowdingProxyScore": 41,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 1500m radius; depends on OSM completeness and generated coordinate quality."
@@ -14281,7 +14281,7 @@ export const vacationData = [
           "marineDataStatus": "available"
         }
       ],
-      "generatedAt": "2026-05-09",
+      "generatedAt": "2026-08-09",
       "years": [
         2021,
         2025
@@ -14351,7 +14351,7 @@ export const vacationData = [
       "quietnessScore": 63,
       "trafficChaosScore": 80,
       "crowdingProxyScore": 5,
-      "overpassQueriedAt": "2026-05-09",
+      "overpassQueriedAt": "2026-08-09",
       "osmSourceUrl": "https://overpass-api.de/api/interpreter",
       "confidence": "medium",
       "notes": "OSM Overpass POI and road-density proxy around generated vacation core using 3000m radius; depends on OSM completeness and generated coordinate quality."

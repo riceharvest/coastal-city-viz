@@ -14,14 +14,24 @@ import {
   YAxis,
   ZAxis,
 } from 'recharts';
-import { Beer, Footprints, MapPin, SlidersHorizontal, Waves } from 'lucide-react';
+import {
+  Beer,
+  Compass,
+  Footprints,
+  Info,
+  MapPin,
+  RotateCcw,
+  Search,
+  SlidersHorizontal,
+  Waves,
+} from 'lucide-react';
 import { cities, type City } from './data';
 import { vacationDataByKey, type VacationRecord } from './vacationData';
 import './styles.css';
 
 const verdictColors: Record<City['verdict'], string> = {
-  'top pick': '#22c55e',
-  possible: '#38bdf8',
+  'top pick': '#10b981',
+  possible: '#06b6d4',
   'weak fit': '#f59e0b',
   reject: '#ef4444',
 };
@@ -113,24 +123,89 @@ function formatMonths(values: string[] | undefined) {
   return values?.length ? values.join(', ') : '—';
 }
 
+function reliabilityColor(score: number) {
+  if (score >= 80) return 'rgba(16, 185, 129, 0.85)';
+  if (score >= 65) return 'rgba(6, 182, 212, 0.8)';
+  if (score >= 50) return 'rgba(245, 158, 11, 0.8)';
+  return 'rgba(239, 68, 68, 0.8)';
+}
+
 function App() {
+  const [activeTab, setActiveTab] = useState<'explorer' | 'analytics' | 'audit'>('explorer');
+  const [searchQuery, setSearchQuery] = useState('');
   const [country, setCountry] = useState('All');
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
   const [maxInternational, setMaxInternational] = useState(80);
   const [minSwimmability, setMinSwimmability] = useState(0);
+  const [tripMonth, setTripMonth] = useState<TripMonth>('Any');
+
+  // Advanced Drawer Filters
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [minWaterCleanliness, setMinWaterCleanliness] = useState(0);
   const [maxClusterRadius, setMaxClusterRadius] = useState(3500);
   const [minLateNightVenues, setMinLateNightVenues] = useState(0);
   const [minNightlifeDensity, setMinNightlifeDensity] = useState(0);
-  const [tripMonth, setTripMonth] = useState<TripMonth>('Any');
   const [minVacationReliability, setMinVacationReliability] = useState(0);
   const [maxArrivalFriction, setMaxArrivalFriction] = useState(100);
   const [maxNoiseChaos, setMaxNoiseChaos] = useState(100);
   const [minFoodCafeDensity, setMinFoodCafeDensity] = useState(0);
   const [minDayTripScore, setMinDayTripScore] = useState(0);
 
+  const resetFilters = () => {
+    setSearchQuery('');
+    setCountry('All');
+    setVerdict('All');
+    setMaxInternational(80);
+    setMinSwimmability(0);
+    setTripMonth('Any');
+    setMinWaterCleanliness(0);
+    setMaxClusterRadius(3500);
+    setMinLateNightVenues(0);
+    setMinNightlifeDensity(0);
+    setMinVacationReliability(0);
+    setMaxArrivalFriction(100);
+    setMaxNoiseChaos(100);
+    setMinFoodCafeDensity(0);
+    setMinDayTripScore(0);
+  };
+
+  const activeAdvancedCount = useMemo(() => {
+    let count = 0;
+    if (minWaterCleanliness > 0) count++;
+    if (maxClusterRadius < 3500) count++;
+    if (minLateNightVenues > 0) count++;
+    if (minNightlifeDensity > 0) count++;
+    if (minVacationReliability > 0) count++;
+    if (maxArrivalFriction < 100) count++;
+    if (maxNoiseChaos < 100) count++;
+    if (minFoodCafeDensity > 0) count++;
+    if (minDayTripScore > 0) count++;
+    return count;
+  }, [
+    minWaterCleanliness,
+    maxClusterRadius,
+    minLateNightVenues,
+    minNightlifeDensity,
+    minVacationReliability,
+    maxArrivalFriction,
+    maxNoiseChaos,
+    minFoodCafeDensity,
+    minDayTripScore,
+  ]);
+
   const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
     return cities
+      .filter((c) => {
+        if (!q) return true;
+        return (
+          c.city.toLowerCase().includes(q) ||
+          c.country.toLowerCase().includes(q) ||
+          c.district.toLowerCase().includes(q) ||
+          c.tags.some((t) => t.toLowerCase().includes(q)) ||
+          c.notes.toLowerCase().includes(q)
+        );
+      })
       .filter((c) => country === 'All' || c.country === country)
       .filter((c) =>
         verdict === 'All' ? true : verdict === 'Viable only' ? c.verdict !== 'reject' : c.verdict === verdict
@@ -157,244 +232,367 @@ function App() {
       })
       .sort((a, b) => verdictRank[a.verdict] - verdictRank[b.verdict] || scoreCity(b) - scoreCity(a));
   }, [
+    searchQuery,
     country,
-    maxClusterRadius,
+    verdict,
     maxInternational,
+    minSwimmability,
+    minWaterCleanliness,
+    maxClusterRadius,
     minLateNightVenues,
     minNightlifeDensity,
+    tripMonth,
     minVacationReliability,
     maxArrivalFriction,
     maxNoiseChaos,
     minFoodCafeDensity,
     minDayTripScore,
-    tripMonth,
-    minSwimmability,
-    minWaterCleanliness,
-    verdict,
   ]);
 
   const top = filtered[0];
-  const denseEnough = cities.filter((c) => c.nightlifeDensity >= 250 && c.swimmability >= 5).length;
-  const vacationRecordsShown = filtered.map(getVacation).filter(Boolean) as VacationRecord[];
-  const reliableCount = vacationRecordsShown.filter((v) => {
-    const month = selectedMonth(v, tripMonth);
-    const score = tripMonth === 'Any'
-      ? Math.max(...v.seasonality.monthly.map((entry) => entry.vacationReliabilityScore))
-      : month?.vacationReliabilityScore ?? 0;
-    return score >= 75;
-  }).length;
-  const heatmapCities = filtered.slice(0, 12).map((city) => ({ city, vacation: getVacation(city) })).filter((item) => item.vacation);
+  const denseAndSwimmable = cities.filter((c) => c.nightlifeDensity >= 200 && c.swimmability >= 7.5).length;
+  const topPicksCount = cities.filter((c) => c.verdict === 'top pick').length;
+
+  const heatmapCities = filtered.slice(0, 14).map((city) => ({ city, vacation: getVacation(city) })).filter((item) => item.vacation);
   const arrivalChart = filtered
     .map((city) => ({ ...city, arrivalFrictionScore: getVacation(city)?.arrival.arrivalFrictionScore }))
     .filter((city) => city.arrivalFrictionScore != null);
 
   return (
-    <main>
-      <section className="hero shell">
-        <div className="eyebrow">SEA vacation spot filter</div>
-        <h1>Find beach vacation spots with dense nightlife and fewer foreigners.</h1>
+    <main className="shell">
+      {/* Navigation Header */}
+      <header className="headerNav">
+        <div className="brand">
+          <div className="brandIcon">
+            <Compass size={24} />
+          </div>
+          <div>
+            <div className="brandTitle">SEA Coastal Explorer</div>
+            <div className="brandSubtitle">Source-backed audit of beach & nightlife destinations</div>
+          </div>
+        </div>
+
+        <nav className="viewTabs">
+          <button
+            className={`tabBtn ${activeTab === 'explorer' ? 'active' : ''}`}
+            onClick={() => setActiveTab('explorer')}
+          >
+            <Compass size={16} /> Explorer
+          </button>
+          <button
+            className={`tabBtn ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
+            <SlidersHorizontal size={16} /> Analytics
+          </button>
+          <button
+            className={`tabBtn ${activeTab === 'audit' ? 'active' : ''}`}
+            onClick={() => setActiveTab('audit')}
+          >
+            <Info size={16} /> Methodology
+          </button>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="heroEyebrow">
+          <Waves size={14} /> 52 Audited SEA Coastal Destinations
+        </div>
+        <h1>Find swimmable beaches with dense nightlife and fewer foreigners.</h1>
         <p>
-          Re-audited for the real target: swimmable beaches, most bars/clubs concentrated in one
-          walkable nightlife area, and lower international-tourist share. City-grid false positives
-          now get punished hard.
+          Compare Southeast Asian coastal destinations by domestic tourist share, beach swimmability,
+          nightlife compactness, weather reliability, and living costs.
         </p>
+
         <div className="heroStats">
-          <Stat icon={<MapPin />} label="places shown" value={`${filtered.length}/${cities.length}`} />
-          <Stat icon={<Beer />} label="dense + swimmable" value={denseEnough.toString()} />
-          <Stat icon={<Waves />} label={tripMonth === 'Any' ? 'reliable months' : `reliable in ${tripMonth}`} value={reliableCount.toString()} />
-          <Stat icon={<Footprints />} label="top shown" value={top ? top.city : '—'} />
+          <StatCard icon={<MapPin />} label="Places Shown" value={`${filtered.length} / ${cities.length}`} />
+          <StatCard icon={<Beer />} label="Dense + Swimmable" value={`${denseAndSwimmable} places`} />
+          <StatCard icon={<Waves />} label="Top Pick Destinations" value={`${topPicksCount} spots`} />
+          <StatCard icon={<Footprints />} label="#1 Match" value={top ? top.city : '—'} />
         </div>
       </section>
 
-      <section className="shell panel filters">
-        <div className="sectionTitle">
-          <SlidersHorizontal />
-          <div>
-            <h2>Filters</h2>
-            <p>{`Default view shows all ${cities.length} audited places. Tighten filters to find the actual target band.`}</p>
-          </div>
+      {/* Main Controls (Filter Panel) */}
+      <section className="controlPanel">
+        <div className="searchBar">
+          <Search className="searchIcon" />
+          <input
+            type="text"
+            className="searchInput"
+            placeholder="Search by city, country, district, or tag (e.g. Krabi, swimmable, Vietnam)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
-        <div className="filterGrid">
-          <label>
-            Country
-            <select value={country} onChange={(e) => setCountry(e.target.value)}>
+
+        <div className="primaryFilters">
+          <div className="filterGroup">
+            <label>Country</label>
+            <select className="selectInput" value={country} onChange={(e) => setCountry(e.target.value)}>
               {countries.map((c) => (
                 <option key={c}>{c}</option>
               ))}
             </select>
-          </label>
-          <label>
-            Verdict
-            <select value={verdict} onChange={(e) => setVerdict(e.target.value as typeof verdict)}>
+          </div>
+
+          <div className="filterGroup">
+            <label>Verdict</label>
+            <select className="selectInput" value={verdict} onChange={(e) => setVerdict(e.target.value as typeof verdict)}>
               {verdicts.map((v) => (
                 <option key={v}>{v}</option>
               ))}
             </select>
-          </label>
-          <Range label="Max international" value={maxInternational} min={0} max={80} step={5} onChange={setMaxInternational} suffix="%" />
-          <Range label="Min swimmability" value={minSwimmability} min={0} max={10} step={0.5} onChange={setMinSwimmability} suffix="/10" />
-          <Range label="Min clean water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
-          <Range label="Max bar radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
-          <Range label="Min late venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
-          <Range label="Min nightlife density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
-          <label>
-            Trip month
-            <select value={tripMonth} onChange={(e) => setTripMonth(e.target.value as TripMonth)}>
-              {months.map((month) => (
-                <option key={month}>{month}</option>
+          </div>
+
+          <div className="filterGroup">
+            <label>Trip Month</label>
+            <select className="selectInput" value={tripMonth} onChange={(e) => setTripMonth(e.target.value as TripMonth)}>
+              {months.map((m) => (
+                <option key={m}>{m}</option>
               ))}
             </select>
-          </label>
-          <Range label="Min vacation reliability" value={minVacationReliability} min={0} max={100} step={5} onChange={setMinVacationReliability} suffix="/100" />
-          <Range label="Max arrival friction" value={maxArrivalFriction} min={0} max={100} step={5} onChange={setMaxArrivalFriction} suffix="/100" />
-          <Range label="Max noise / chaos" value={maxNoiseChaos} min={0} max={100} step={5} onChange={setMaxNoiseChaos} suffix="/100" />
-          <Range label="Min food+cafe density" value={minFoodCafeDensity} min={0} max={200} step={5} onChange={setMinFoodCafeDensity} suffix="/km²" />
-          <Range label="Min day-trip proxy" value={minDayTripScore} min={0} max={100} step={5} onChange={setMinDayTripScore} suffix="/100" />
+          </div>
+
+          <div className="filterGroup">
+            <label>
+              Max Foreign Tourists <span className="val">{maxInternational}%</span>
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={80}
+              step={5}
+              value={maxInternational}
+              onChange={(e) => setMaxInternational(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="filterGroup">
+            <label>
+              Min Swimmability <span className="val">{minSwimmability}/10</span>
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={10}
+              step={0.5}
+              value={minSwimmability}
+              onChange={(e) => setMinSwimmability(Number(e.target.value))}
+            />
+          </div>
+
+          <button
+            className={`advancedToggleBtn ${showAdvanced ? 'active' : ''}`}
+            onClick={() => setShowAdvanced(!showAdvanced)}
+          >
+            <SlidersHorizontal size={16} /> Advanced {activeAdvancedCount > 0 && `(${activeAdvancedCount})`}
+          </button>
         </div>
+
+        {showAdvanced && (
+          <div className="advancedDrawer">
+            <RangeFilter label="Min Clean Water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
+            <RangeFilter label="Max Bar Cluster Radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
+            <RangeFilter label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
+            <RangeFilter label="Min Nightlife Density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
+            <RangeFilter label="Min Vacation Reliability" value={minVacationReliability} min={0} max={100} step={5} onChange={setMinVacationReliability} suffix="/100" />
+            <RangeFilter label="Max Arrival Friction" value={maxArrivalFriction} min={0} max={100} step={5} onChange={setMaxArrivalFriction} suffix="/100" />
+            <RangeFilter label="Max Noise / Chaos" value={maxNoiseChaos} min={0} max={100} step={5} onChange={setMaxNoiseChaos} suffix="/100" />
+            <RangeFilter label="Min Food+Cafe Density" value={minFoodCafeDensity} min={0} max={200} step={5} onChange={setMinFoodCafeDensity} suffix="/km²" />
+            <RangeFilter label="Min Day-Trip Score" value={minDayTripScore} min={0} max={100} step={5} onChange={setMinDayTripScore} suffix="/100" />
+            <div className="drawerFooter">
+              <button className="resetBtn" onClick={resetFilters}>
+                <RotateCcw size={12} /> Reset All Filters
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
-      <section className="shell charts">
-        <div className="panel chartPanel">
-          <h2>International tourists vs nightlife density</h2>
-          <p>Best zone is upper-left: fewer foreigners, denser nightlife. Bubble size = beach swimmability. X-axis focuses on the 0–40% target band.</p>
-          <ResponsiveContainer width="100%" height={360}>
-            <ScatterChart margin={{ top: 20, right: 28, bottom: 42, left: 0 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-              <XAxis
-                type="number"
-                dataKey="internationalPct"
-                name="International tourists"
-                unit="%"
-                domain={[0, 40]}
-                allowDataOverflow
-                ticks={[0, 5, 10, 15, 20, 25, 30, 35, 40]}
-                stroke="#94a3b8"
-                label={{ value: 'International tourists in vacation core — lower is better', position: 'insideBottom', offset: -24, fill: '#94a3b8', fontSize: 12 }}
-              />
-              <YAxis
-                type="number"
-                dataKey="nightlifeDensity"
-                name="Nightlife density"
-                unit="/km²"
-                domain={[0, 900]}
-                ticks={[0, 150, 300, 450, 600, 750, 900]}
-                stroke="#94a3b8"
-              />
-              <ZAxis type="number" dataKey="swimmability" range={[70, 260]} />
-              <Tooltip content={<CityTooltip />} />
-              <Scatter data={filtered}>
-                {filtered.map((entry) => (
-                  <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
-                ))}
-              </Scatter>
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Explorer Tab Content */}
+      {activeTab === 'explorer' && (
+        <section className="cardList">
+          {filtered.map((city, idx) => (
+            <DestinationCard key={`${city.city}-${city.district}`} city={city} rank={idx + 1} />
+          ))}
+          {filtered.length === 0 && (
+            <div className="emptyState">
+              No destinations match your filter criteria. Try resetting filters or choosing "All".
+            </div>
+          )}
+        </section>
+      )}
 
-        <div className="panel chartPanel">
-          <h2>Beach false-positive audit</h2>
-          <p>Separates “near a beach” from actually usable: sand/usefulness, clean water, safety, and evening beach life.</p>
-          <ResponsiveContainer width="100%" height={360}>
-            <BarChart data={filtered} margin={{ top: 20, right: 20, bottom: 80, left: 0 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-              <XAxis dataKey="city" angle={-35} textAnchor="end" interval={0} stroke="#94a3b8" height={90} />
-              <YAxis stroke="#94a3b8" domain={[0, 10]} ticks={[0, 2, 4, 6, 8, 10]} />
-              <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12 }} />
-              <Legend />
-              <Bar dataKey="beachQualityScore" name="Beach quality" fill="#38bdf8" />
-              <Bar dataKey="waterCleanlinessScore" name="Clean water" fill="#22c55e" />
-              <Bar dataKey="currentSafetyScore" name="Swim safety" fill="#f59e0b" />
-              <Bar dataKey="eveningBeachLifeScore" name="Evening beach" fill="#a78bfa" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Analytics Tab Content */}
+      {activeTab === 'analytics' && (
+        <section className="analyticsContainer">
+          <div className="chartCard">
+            <div className="chartHeader">
+              <h2>International Tourists vs Nightlife Density</h2>
+              <p>Top-left quadrant is ideal: low foreign share + high bar density. Bubble size represents swimmability.</p>
+            </div>
+            <ResponsiveContainer width="100%" height={340}>
+              <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 0 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+                <XAxis
+                  type="number"
+                  dataKey="internationalPct"
+                  name="Foreign Tourists"
+                  unit="%"
+                  domain={[0, 50]}
+                  stroke="#94a3b8"
+                />
+                <YAxis
+                  type="number"
+                  dataKey="nightlifeDensity"
+                  name="Nightlife Density"
+                  unit="/km²"
+                  stroke="#94a3b8"
+                />
+                <ZAxis type="number" dataKey="swimmability" range={[60, 240]} />
+                <Tooltip content={<ScatterTooltip />} />
+                <Scatter data={filtered}>
+                  {filtered.map((entry) => (
+                    <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
+                  ))}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
 
-        <div className="panel chartPanel chartPanelWide">
-          <h2>Nightlife compactness + late-night depth</h2>
-          <p>Bars within a 10-minute walk and late-night venues catch spread-out resort strips versus real bar grids.</p>
-          <ResponsiveContainer width="100%" height={360}>
-            <BarChart data={filtered} margin={{ top: 20, right: 20, bottom: 80, left: 0 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-              <XAxis dataKey="city" angle={-35} textAnchor="end" interval={0} stroke="#94a3b8" height={90} />
-              <YAxis stroke="#94a3b8" />
-              <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12 }} />
-              <Legend />
-              <Bar dataKey="barsWithin10MinWalk" name="Bars / 10-min walk" fill="#38bdf8" />
-              <Bar dataKey="lateNightVenuesCount" name="Late-night venues" fill="#a78bfa" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <div className="chartCard">
+            <div className="chartHeader">
+              <h2>Beach Quality & Water Cleanliness Audit</h2>
+              <p>Comparing physical beach usability and water cleanliness scores across filtered destinations.</p>
+            </div>
+            <ResponsiveContainer width="100%" height={340}>
+              <BarChart data={filtered.slice(0, 12)} margin={{ top: 20, right: 20, bottom: 60, left: 0 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+                <XAxis dataKey="city" angle={-35} textAnchor="end" stroke="#94a3b8" interval={0} height={70} />
+                <YAxis stroke="#94a3b8" domain={[0, 10]} />
+                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12 }} />
+                <Legend />
+                <Bar dataKey="beachQualityScore" name="Beach Quality" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="waterCleanlinessScore" name="Water Cleanliness" fill="#10b981" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-        <div className="panel chartPanel chartPanelWide">
-          <h2>Monthly vacation reliability</h2>
-          <p>Open-Meteo weather + marine proxy by month. Shows the first 12 filtered places to keep the heatmap readable.</p>
-          <div className="heatmap">
-            <div className="heatmapHeader"><span />{months.slice(1).map((month) => <b key={month}>{month}</b>)}</div>
-            {heatmapCities.map(({ city, vacation }) => (
-              <div className="heatmapRow" key={city.city}>
-                <strong>{city.city}</strong>
-                {vacation!.seasonality.monthly.map((month) => (
-                  <span
-                    key={month.label}
-                    className="heatmapCell"
-                    style={{ background: reliabilityColor(month.vacationReliabilityScore) }}
-                    title={`${city.city} ${month.label}: ${month.vacationReliabilityScore}/100, rain ${month.rainyDaysPct}%, wave P90 ${formatNumber(month.waveHeightMaxP90M, 'm')}`}
-                  >
-                    {month.vacationReliabilityScore}
-                  </span>
+          <div className="chartCard chartCardFull">
+            <div className="chartHeader">
+              <h2>Monthly Weather & Vacation Reliability Heatmap</h2>
+              <p>Multi-year Open-Meteo climate & marine P90 wave history score per month (0–100).</p>
+            </div>
+            <div className="heatmapWrapper">
+              <div className="heatmapGrid">
+                <div className="heatmapHeaderRow">
+                  <span />
+                  {months.slice(1).map((m) => (
+                    <span key={m}>{m}</span>
+                  ))}
+                </div>
+                {heatmapCities.map(({ city, vacation }) => (
+                  <div className="heatmapDataRow" key={city.city}>
+                    <strong>{city.city}</strong>
+                    {vacation!.seasonality.monthly.map((m) => (
+                      <div
+                        key={m.label}
+                        className="heatmapCell"
+                        style={{ background: reliabilityColor(m.vacationReliabilityScore) }}
+                        title={`${city.city} (${m.label}): Reliability ${m.vacationReliabilityScore}/100 | Rain ${m.rainyDaysPct}% | Wave P90 ${formatNumber(m.waveHeightMaxP90M, 'm')}`}
+                      >
+                        {m.vacationReliabilityScore}
+                      </div>
+                    ))}
+                  </div>
                 ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
 
-        <div className="panel chartPanel chartPanelWide">
-          <h2>Arrival friction vs fit score</h2>
-          <p>Airport-distance + country advisory proxy. Transfer minutes and direct flights stay unknown until route-specific sources are added.</p>
-          <ResponsiveContainer width="100%" height={340}>
-            <ScatterChart margin={{ top: 20, right: 28, bottom: 42, left: 0 }}>
-              <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-              <XAxis type="number" dataKey={(city) => scoreCity(city as City)} name="Fit score" domain={[0, 100]} stroke="#94a3b8" />
-              <YAxis type="number" dataKey="arrivalFrictionScore" name="Arrival friction" domain={[0, 100]} stroke="#94a3b8" />
-              <Tooltip content={<ArrivalTooltip />} />
-              <Scatter data={arrivalChart}>
-                {arrivalChart.map((entry) => (
-                  <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
-                ))}
-              </Scatter>
-            </ScatterChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
+          <div className="chartCard chartCardFull">
+            <div className="chartHeader">
+              <h2>Arrival Friction vs Overall Fit Score</h2>
+              <p>Airport transfer distance and safety advisory friction compared to city fit score.</p>
+            </div>
+            <ResponsiveContainer width="100%" height={320}>
+              <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 0 }}>
+                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+                <XAxis type="number" dataKey={(c) => scoreCity(c as City)} name="Fit Score" domain={[0, 100]} stroke="#94a3b8" />
+                <YAxis type="number" dataKey="arrivalFrictionScore" name="Arrival Friction" domain={[0, 100]} stroke="#94a3b8" />
+                <Tooltip content={<ArrivalScatterTooltip />} />
+                <Scatter data={arrivalChart}>
+                  {arrivalChart.map((entry) => (
+                    <Cell key={entry.city} fill={verdictColors[entry.verdict]} />
+                  ))}
+                </Scatter>
+              </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      )}
 
-      <section className="shell list">
-        {filtered.map((city, index) => (
-          <CityCard key={`${city.city}-${city.district}`} city={city} rank={index + 1} />
-        ))}
-        {!filtered.length && <div className="panel empty">No places match the current filters.</div>}
-      </section>
+      {/* Audit / Methodology Tab Content */}
+      {activeTab === 'audit' && (
+        <section className="auditSection">
+          <h2>Data Audit & Scoring Methodology</h2>
+          <p>
+            This index compares Southeast Asian coastal locations on three primary pillars:
+            <strong> Domestic atmosphere</strong> (low international tourist congestion),
+            <strong> Beach swimmability & cleanliness</strong>, and <strong> Compact walkable nightlife</strong>.
+          </p>
+
+          <div className="formulaGrid">
+            <div className="formulaCard">
+              <h3>1. Domestic Atmosphere (22%)</h3>
+              <p>
+                Calculated as <code>(100 - internationalPct)</code>. Locations with under 20% international
+                tourist share rank significantly higher for authentic local culture and non-overcrowded vibes.
+              </p>
+            </div>
+
+            <div className="formulaCard">
+              <h3>2. Beach Usability (28%)</h3>
+              <p>
+                Composite score of 5 sub-factors: swimmability, physical sand/beach quality, water cleanliness,
+                current/rip safety, and evening promenade activity.
+              </p>
+            </div>
+
+            <div className="formulaCard">
+              <h3>3. Walkable Nightlife (40%)</h3>
+              <p>
+                Combines bar density per km², venue count within a 10-minute walk, late-night operating venues,
+                and compact cluster radius (penalizes spread-out 10km highway resort strips).
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="stat">
-      {icon}
-      <span>{label}</span>
-      <strong>{value}</strong>
+    <div className="statCard">
+      <div className="statIcon">{icon}</div>
+      <div className="statInfo">
+        <span className="statLabel">{label}</span>
+        <span className="statValue">{value}</span>
+      </div>
     </div>
   );
 }
 
-function Range({
+function RangeFilter({
   label,
   value,
   min,
   max,
   step,
   onChange,
-  prefix = '',
   suffix = '',
 }: {
   label: string;
@@ -402,163 +600,242 @@ function Range({
   min: number;
   max: number;
   step: number;
-  onChange: (value: number) => void;
-  prefix?: string;
+  onChange: (v: number) => void;
   suffix?: string;
 }) {
   return (
-    <label>
-      <span className="rangeHeader">
-        {label} <b>{prefix}{value}{suffix}</b>
-      </span>
-      <input type="range" value={value} min={min} max={max} step={step} onChange={(e) => onChange(Number(e.target.value))} />
-    </label>
-  );
-}
-
-function CityTooltip({ active, payload }: any) {
-  if (!active || !payload?.[0]?.payload) return null;
-  const city: City = payload[0].payload;
-  return (
-    <div className="tooltip">
-      <strong>{city.city}</strong>
-      <span>{city.district}</span>
-      <span>International: {city.internationalPct}%</span>
-      <span>Density: {city.nightlifeDensity}/km²</span>
-      <span>Beach quality: {city.beachQualityScore}/10</span>
-      <span>Clean water: {city.waterCleanlinessScore}/10</span>
-      <span>Bars / 10-min walk: {city.barsWithin10MinWalk}</span>
-      <span>Late-night venues: {city.lateNightVenuesCount}</span>
-      <span>Cluster radius: {city.barClusterRadiusMeters}m</span>
-      <span>Fit score: {scoreCity(city)}/100</span>
+    <div className="filterGroup">
+      <label>
+        {label} <span className="val">{value}{suffix}</span>
+      </label>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
     </div>
   );
 }
 
-function reliabilityColor(score: number) {
-  if (score >= 80) return 'rgba(34, 197, 94, 0.78)';
-  if (score >= 65) return 'rgba(56, 189, 248, 0.72)';
-  if (score >= 50) return 'rgba(245, 158, 11, 0.72)';
-  return 'rgba(239, 68, 68, 0.72)';
-}
-
-function ArrivalTooltip({ active, payload }: any) {
-  if (!active || !payload?.[0]?.payload) return null;
-  const city: City = payload[0].payload;
+function DestinationCard({ city, rank }: { city: City; rank: number }) {
+  const [activeSubTab, setActiveSubTab] = useState<'beach' | 'nightlife' | 'travel' | 'evidence'>('beach');
   const vacation = getVacation(city);
-  return (
-    <div className="tooltip">
-      <strong>{city.city}</strong>
-      <span>Fit score: {scoreCity(city)}/100</span>
-      <span>Arrival friction: {formatNumber(vacation?.arrival.arrivalFrictionScore, '/100')}</span>
-      <span>Airport: {vacation?.arrival.nearestAirport ?? '—'} · {formatNumber(vacation?.arrival.airportDistanceKm, 'km')}</span>
-      <span>Safety: {vacation?.arrival.safetyAdvisory?.label ?? '—'}</span>
-    </div>
+  const fitScore = scoreCity(city);
+  const bestMonth = vacation?.seasonality.monthly.reduce(
+    (best, m) => (m.vacationReliabilityScore > best.vacationReliabilityScore ? m : best),
+    vacation.seasonality.monthly[0]
   );
-}
 
-function CityCard({ city, rank }: { city: City; rank: number }) {
-  const vacation = getVacation(city);
-  const bestMonth = vacation?.seasonality.monthly.reduce((best, month) => month.vacationReliabilityScore > best.vacationReliabilityScore ? month : best, vacation.seasonality.monthly[0]);
   return (
-    <article className="panel cityCard" style={{ borderColor: `${verdictColors[city.verdict]}55` }}>
-      <div className="rank">#{rank}</div>
-      <div className="cityMain">
-        <div className="cityHeader">
+    <article className="destCard" style={{ borderColor: `${verdictColors[city.verdict]}44` }}>
+      <div className="destCardHeader">
+        <div className="destCardTitleRow">
+          <div className="rankBadge">#{rank}</div>
           <div>
-            <h3>{city.city}</h3>
-            <p>{city.country} · {city.district}</p>
+            <h3 className="cityName">{city.city}</h3>
+            <div className="citySub">
+              {city.country} · {city.district}
+            </div>
           </div>
-          <span className="pill" style={{ background: `${verdictColors[city.verdict]}22`, color: verdictColors[city.verdict] }}>
+        </div>
+
+        <div className="headerBadges">
+          <span
+            className="verdictPill"
+            style={{ background: `${verdictColors[city.verdict]}22`, color: verdictColors[city.verdict] }}
+          >
             {city.verdict}
           </span>
-        </div>
-        <p className="notes">{city.notes}</p>
-        <div className="tagRow">
-          {city.tags.map((tag) => (
-            <span key={tag} className="tag">{tag}</span>
-          ))}
-        </div>
-        <div className="metrics">
-          <Metric label="International" value={`${city.internationalPct}%`} />
-          <Metric label="Nightlife density" value={`${city.nightlifeDensity}/km²`} />
-          <Metric label="Bars / 10-min" value={`${city.barsWithin10MinWalk}`} />
-          <Metric label="Late venues" value={`${city.lateNightVenuesCount}`} />
-          <Metric label="Bar radius" value={`${city.barClusterRadiusMeters}m`} />
-          <Metric label="Swimmability" value={`${city.swimmability}/10`} />
-          <Metric label="Beach quality" value={`${city.beachQualityScore}/10`} />
-          <Metric label="Clean water" value={`${city.waterCleanlinessScore}/10`} />
-          <Metric label="Swim safety" value={`${city.currentSafetyScore}/10`} />
-          <Metric label="Evening beach" value={`${city.eveningBeachLifeScore}/10`} />
-          <Metric label="Beach walk" value={`${city.walkability}/10`} />
-          <Metric label="Beach distance" value={`${city.beachDistanceKm}km`} />
-          <Metric label="vs Amsterdam" value={`${city.densityVsAmsterdamPct}%`} />
-          <Metric label="Monthly cost" value={`${money(city.monthlyLocalCostUsd)} mid`} />
-          <Metric label="Fit score" value={`${scoreCity(city)}/100`} />
-        </div>
-        {vacation && (
-          <section className="vacationSection">
-            <div className="vacationHeader">
-              <h4>Vacation reality</h4>
-              <span>generated {vacation.seasonality.generatedAt}</span>
-            </div>
-            <div className="metrics vacationGrid">
-              <Metric label="Best months" value={formatMonths(vacation.seasonality.bestMonths)} />
-              <Metric label="Avoid months" value={formatMonths(vacation.seasonality.avoidMonths)} />
-              <Metric label="Best month score" value={bestMonth ? `${bestMonth.label} ${bestMonth.vacationReliabilityScore}/100` : '—'} />
-              <Metric label="Rainy days best" value={formatNumber(bestMonth?.rainyDaysPct, '%')} />
-              <Metric label="Wave P90 best" value={formatNumber(bestMonth?.waveHeightMaxP90M, 'm')} />
-              <Metric label="Sea temp best" value={formatNumber(bestMonth?.seaSurfaceTempMeanC, '°C')} />
-              <Metric label="Nearest airport" value={`${vacation.arrival.nearestAirport} · ${vacation.arrival.airportDistanceKm}km`} />
-              <Metric label="Arrival friction" value={formatNumber(vacation.arrival.arrivalFrictionScore, '/100')} />
-              <Metric label="Safety advisory" value={vacation.arrival.safetyAdvisory?.level ? `US L${vacation.arrival.safetyAdvisory.level}` : '—'} />
-              <Metric label="Transfer time" value="— route source needed" />
-              <Metric label="Monthly cost proxy" value={formatMoney(vacation.accommodation.monthlyCostProxyUsd)} />
-              <Metric label="Accommodation supply" value={formatNumber(vacation.accommodation.accommodationSupplyScore, '/100')} />
-              <Metric label="Hotel nightly" value="— manual sample needed" />
-              <Metric label="Food+cafe density" value={formatNumber(vacation.osmPoiMetrics.foodCafeDensityPerKm2, '/km²')} />
-              <Metric label="Bar/pub/club density" value={formatNumber(vacation.osmPoiMetrics.barPubClubDensityPerKm2, '/km²')} />
-              <Metric label="Noise / chaos proxy" value={formatNumber(vacation.noiseChaosMetrics.noiseChaosScore, '/100')} />
-              <Metric label="Quietness proxy" value={formatNumber(vacation.noiseChaosMetrics.quietnessScore, '/100')} />
-              <Metric label="Day-trip proxy" value={formatNumber(vacation.dayTripMetrics.dayTripScore, '/100')} />
-            </div>
-          </section>
-        )}
-        <details className="evidence">
-          <summary>Evidence + audit method</summary>
-          <p>{city.densityMethod}</p>
-          <p><strong>Beach audit:</strong> {city.beachAudit}</p>
-          <p><strong>Nightlife audit:</strong> {city.nightlifeAudit}</p>
-          {vacation && (
-            <>
-              <p><strong>Vacation data:</strong> Weather/marine from Open-Meteo 2021–2025; coordinates from OSM Nominatim; airport from OurAirports; POI/accommodation/noise proxies from OSM Overpass; safety level from US State Dept country advisory. Hotel nightly prices, transfer minutes, direct flights, and passport-specific visa rules stay unknown until sourced.</p>
-              <div className="sourceLinks">
-                <a href={vacation.coordinate.sourceUrl} target="_blank" rel="noreferrer">coordinate</a>
-                <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noreferrer">Open-Meteo weather</a>
-                <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noreferrer">Open-Meteo marine</a>
-                <a href="https://ourairports.com/data/" target="_blank" rel="noreferrer">OurAirports</a>
-                <a href="https://wiki.openstreetmap.org/wiki/Overpass_API" target="_blank" rel="noreferrer">OSM Overpass</a>
-                <a href={vacation.arrival.safetyAdvisory.sourceUrl} target="_blank" rel="noreferrer">US advisory</a>
-                <a href={vacation.arrival.visa.gbSourceUrl} target="_blank" rel="noreferrer">GB entry rules</a>
-              </div>
-            </>
-          )}
-          <div className="sourceLinks">
-            {city.sourceUrls.map((url, i) => (
-              <a key={url} href={url} target="_blank" rel="noreferrer">source {i + 1}</a>
-            ))}
+          <div className="fitScoreBadge">
+            <span className="scoreNum">{fitScore}</span>
+            <span className="scoreLabel">Fit Score</span>
           </div>
-        </details>
+        </div>
+      </div>
+
+      <p className="cardNotes">{city.notes}</p>
+
+      <div className="tagRow">
+        {city.tags.map((tag) => (
+          <span key={tag} className="tagPill">
+            #{tag}
+          </span>
+        ))}
+      </div>
+
+      {/* Key Metrics Summary Grid */}
+      <div className="cardMetricGrid">
+        <div className="metricBox">
+          <span className="label">Foreign Tourists</span>
+          <span className="val">{city.internationalPct}%</span>
+        </div>
+        <div className="metricBox">
+          <span className="label">Swimmability</span>
+          <span className="val">{city.swimmability} / 10</span>
+        </div>
+        <div className="metricBox">
+          <span className="label">Nightlife Density</span>
+          <span className="val">{city.nightlifeDensity} / km²</span>
+        </div>
+        <div className="metricBox">
+          <span className="label">10-Min Walk Bars</span>
+          <span className="val">{city.barsWithin10MinWalk} venues</span>
+        </div>
+        <div className="metricBox">
+          <span className="label">Local Monthly Cost</span>
+          <span className="val">{money(city.monthlyLocalCostUsd)}</span>
+        </div>
+        <div className="metricBox">
+          <span className="label">Best Weather</span>
+          <span className="val">{formatMonths(vacation?.seasonality.bestMonths)}</span>
+        </div>
+      </div>
+
+      {/* Expandable Sub-Tabs */}
+      <div className="cardAccordion">
+        <div className="accordionHeader">
+          <div className="detailTabs">
+            <button
+              className={`detailTabBtn ${activeSubTab === 'beach' ? 'active' : ''}`}
+              onClick={() => setActiveSubTab('beach')}
+            >
+              🏖️ Beach & Swim
+            </button>
+            <button
+              className={`detailTabBtn ${activeSubTab === 'nightlife' ? 'active' : ''}`}
+              onClick={() => setActiveSubTab('nightlife')}
+            >
+              🍸 Nightlife & Vibe
+            </button>
+            <button
+              className={`detailTabBtn ${activeSubTab === 'travel' ? 'active' : ''}`}
+              onClick={() => setActiveSubTab('travel')}
+            >
+              ✈️ Travel & Weather
+            </button>
+            <button
+              className={`detailTabBtn ${activeSubTab === 'evidence' ? 'active' : ''}`}
+              onClick={() => setActiveSubTab('evidence')}
+            >
+              📜 Audit & Evidence
+            </button>
+          </div>
+        </div>
+
+        <div className="detailPanel">
+          {activeSubTab === 'beach' && (
+            <div className="subMetricGrid">
+              <div className="subMetricBox">
+                <span>Beach Quality</span>
+                <strong>{city.beachQualityScore} / 10</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Water Cleanliness</span>
+                <strong>{city.waterCleanlinessScore} / 10</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Swim Safety</span>
+                <strong>{city.currentSafetyScore} / 10</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Evening Beach Life</span>
+                <strong>{city.eveningBeachLifeScore} / 10</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Beach Walkability</span>
+                <strong>{city.walkability} / 10</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Beach Distance</span>
+                <strong>{city.beachDistanceKm} km</strong>
+              </div>
+            </div>
+          )}
+
+          {activeSubTab === 'nightlife' && (
+            <div className="subMetricGrid">
+              <div className="subMetricBox">
+                <span>Bars in 10m Walk</span>
+                <strong>{city.barsWithin10MinWalk}</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Late Night Venues</span>
+                <strong>{city.lateNightVenuesCount}</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Bar Cluster Radius</span>
+                <strong>{city.barClusterRadiusMeters} m</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>vs Amsterdam Core</span>
+                <strong>{city.densityVsAmsterdamPct}%</strong>
+              </div>
+            </div>
+          )}
+
+          {activeSubTab === 'travel' && (
+            <div className="subMetricGrid">
+              <div className="subMetricBox">
+                <span>Nearest Airport</span>
+                <strong>{vacation?.arrival.nearestAirport ?? '—'} ({formatNumber(vacation?.arrival.airportDistanceKm, 'km')})</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Arrival Friction</span>
+                <strong>{formatNumber(vacation?.arrival.arrivalFrictionScore, ' / 100')}</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>US Safety Advisory</span>
+                <strong>{vacation?.arrival.safetyAdvisory?.level ? `Level ${vacation.arrival.safetyAdvisory.level}` : '—'}</strong>
+              </div>
+              <div className="subMetricBox">
+                <span>Peak Month Weather</span>
+                <strong>{bestMonth ? `${bestMonth.label} (${bestMonth.vacationReliabilityScore}/100)` : '—'}</strong>
+              </div>
+            </div>
+          )}
+
+          {activeSubTab === 'evidence' && (
+            <div className="evidenceBlock">
+              <p><strong>Density Method:</strong> {city.densityMethod}</p>
+              <p><strong>Beach Audit:</strong> {city.beachAudit}</p>
+              <p><strong>Nightlife Audit:</strong> {city.nightlifeAudit}</p>
+
+              <div className="sourceLinks">
+                {city.sourceUrls.map((url, i) => (
+                  <a key={url} href={url} target="_blank" rel="noreferrer" className="sourceLink">
+                    Source #{i + 1}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </article>
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function ScatterTooltip({ active, payload }: any) {
+  if (!active || !payload?.[0]?.payload) return null;
+  const city: City = payload[0].payload;
   return (
-    <div className="metric">
-      <span>{label}</span>
-      <strong>{value}</strong>
+    <div className="customTooltip">
+      <strong>{city.city}</strong>
+      <span>Country: {city.country} ({city.district})</span>
+      <span>Foreign Tourists: {city.internationalPct}%</span>
+      <span>Nightlife Density: {city.nightlifeDensity} / km²</span>
+      <span>Swimmability: {city.swimmability} / 10</span>
+      <span>Fit Score: {scoreCity(city)} / 100</span>
+    </div>
+  );
+}
+
+function ArrivalScatterTooltip({ active, payload }: any) {
+  if (!active || !payload?.[0]?.payload) return null;
+  const city: City = payload[0].payload;
+  const vacation = getVacation(city);
+  return (
+    <div className="customTooltip">
+      <strong>{city.city}</strong>
+      <span>Fit Score: {scoreCity(city)} / 100</span>
+      <span>Arrival Friction: {formatNumber(vacation?.arrival.arrivalFrictionScore, ' / 100')}</span>
+      <span>Airport: {vacation?.arrival.nearestAirport ?? '—'} ({formatNumber(vacation?.arrival.airportDistanceKm, 'km')})</span>
     </div>
   );
 }
