@@ -20,6 +20,7 @@ import {
   Footprints,
   Info,
   MapPin,
+  Plane,
   RotateCcw,
   Search,
   SlidersHorizontal,
@@ -103,6 +104,26 @@ function selectedMonth(vacation: VacationRecord | undefined, month: TripMonth) {
   return vacation.seasonality.monthly.find((entry) => entry.label === month);
 }
 
+function getAirportEase(city: City) {
+  const vacation = getVacation(city);
+  const dist = vacation?.arrival.airportDistanceKm;
+  const airport = vacation?.arrival.nearestAirport ?? 'Airport';
+  if (dist == null) return { score: 5, label: 'Unknown', tag: '—', dist: null };
+
+  const isFerryIsland =
+    city.tags.includes('island') &&
+    (city.city.includes('Gili') || city.city.includes('Perhentian') || city.city.includes('Phangan'));
+
+  if (isFerryIsland) {
+    return { score: 4, label: 'Ferry + Road', tag: `Ferry + ${dist}km (${airport})`, dist };
+  }
+
+  if (dist <= 15) return { score: 10, label: 'Very Easy', tag: `${dist}km (${airport})`, dist };
+  if (dist <= 40) return { score: 8.5, label: 'Easy', tag: `${dist}km (${airport})`, dist };
+  if (dist <= 85) return { score: 6.5, label: 'Moderate', tag: `${dist}km (${airport})`, dist };
+  return { score: 4, label: 'Long Transfer', tag: `${dist}km (${airport})`, dist };
+}
+
 function passesMinKnown(value: number | undefined | null, min: number) {
   return value == null ? true : value >= min;
 }
@@ -113,10 +134,6 @@ function passesMaxKnown(value: number | undefined | null, max: number) {
 
 function formatNumber(value: number | null | undefined, suffix = '') {
   return value == null || !Number.isFinite(value) ? '—' : `${value}${suffix}`;
-}
-
-function formatMoney(value: number | null | undefined) {
-  return value == null || !Number.isFinite(value) ? '—' : `$${value.toLocaleString()}`;
 }
 
 function formatMonths(values: string[] | undefined) {
@@ -137,6 +154,7 @@ function App() {
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
   const [maxInternational, setMaxInternational] = useState(80);
   const [minSwimmability, setMinSwimmability] = useState(0);
+  const [maxAirportDistance, setMaxAirportDistance] = useState(200);
   const [tripMonth, setTripMonth] = useState<TripMonth>('Any');
 
   // Advanced Drawer Filters
@@ -157,6 +175,7 @@ function App() {
     setVerdict('All');
     setMaxInternational(80);
     setMinSwimmability(0);
+    setMaxAirportDistance(200);
     setTripMonth('Any');
     setMinWaterCleanliness(0);
     setMaxClusterRadius(3500);
@@ -212,6 +231,7 @@ function App() {
       )
       .filter((c) => c.internationalPct <= maxInternational)
       .filter((c) => c.swimmability >= minSwimmability)
+      .filter((c) => passesMaxKnown(getVacation(c)?.arrival.airportDistanceKm, maxAirportDistance))
       .filter((c) => c.waterCleanlinessScore >= minWaterCleanliness)
       .filter((c) => c.barClusterRadiusMeters <= maxClusterRadius)
       .filter((c) => c.lateNightVenuesCount >= minLateNightVenues)
@@ -237,6 +257,7 @@ function App() {
     verdict,
     maxInternational,
     minSwimmability,
+    maxAirportDistance,
     minWaterCleanliness,
     maxClusterRadius,
     minLateNightVenues,
@@ -251,11 +272,18 @@ function App() {
 
   const top = filtered[0];
   const denseAndSwimmable = cities.filter((c) => c.nightlifeDensity >= 200 && c.swimmability >= 7.5).length;
-  const topPicksCount = cities.filter((c) => c.verdict === 'top pick').length;
+  const easyAirportCount = cities.filter((c) => {
+    const d = getVacation(c)?.arrival.airportDistanceKm;
+    return d != null && d <= 30;
+  }).length;
 
   const heatmapCities = filtered.slice(0, 14).map((city) => ({ city, vacation: getVacation(city) })).filter((item) => item.vacation);
   const arrivalChart = filtered
-    .map((city) => ({ ...city, arrivalFrictionScore: getVacation(city)?.arrival.arrivalFrictionScore }))
+    .map((city) => ({
+      ...city,
+      arrivalFrictionScore: getVacation(city)?.arrival.arrivalFrictionScore,
+      airportDistanceKm: getVacation(city)?.arrival.airportDistanceKm,
+    }))
     .filter((city) => city.arrivalFrictionScore != null);
 
   return (
@@ -302,13 +330,13 @@ function App() {
         <h1>Find swimmable beaches with dense nightlife and fewer foreigners.</h1>
         <p>
           Compare Southeast Asian coastal destinations by domestic tourist share, beach swimmability,
-          nightlife compactness, weather reliability, and living costs.
+          airport access ease, nightlife compactness, weather reliability, and living costs.
         </p>
 
         <div className="heroStats">
           <StatCard icon={<MapPin />} label="Places Shown" value={`${filtered.length} / ${cities.length}`} />
           <StatCard icon={<Beer />} label="Dense + Swimmable" value={`${denseAndSwimmable} places`} />
-          <StatCard icon={<Waves />} label="Top Pick Destinations" value={`${topPicksCount} spots`} />
+          <StatCard icon={<Plane />} label="Airport <30km" value={`${easyAirportCount} spots`} />
           <StatCard icon={<Footprints />} label="#1 Match" value={top ? top.city : '—'} />
         </div>
       </section>
@@ -392,6 +420,7 @@ function App() {
 
         {showAdvanced && (
           <div className="advancedDrawer">
+            <RangeFilter label="Max Airport Distance" value={maxAirportDistance} min={10} max={200} step={10} onChange={setMaxAirportDistance} suffix="km" />
             <RangeFilter label="Min Clean Water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
             <RangeFilter label="Max Bar Cluster Radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
             <RangeFilter label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
@@ -513,8 +542,8 @@ function App() {
 
           <div className="chartCard chartCardFull">
             <div className="chartHeader">
-              <h2>Arrival Friction vs Overall Fit Score</h2>
-              <p>Airport transfer distance and safety advisory friction compared to city fit score.</p>
+              <h2>Arrival Friction & Airport Distance vs Overall Fit Score</h2>
+              <p>Airport distance (km) and safety advisory friction compared to city fit score.</p>
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 0 }}>
@@ -617,6 +646,7 @@ function DestinationCard({ city, rank }: { city: City; rank: number }) {
   const [activeSubTab, setActiveSubTab] = useState<'beach' | 'nightlife' | 'travel' | 'evidence'>('beach');
   const vacation = getVacation(city);
   const fitScore = scoreCity(city);
+  const airportEase = getAirportEase(city);
   const bestMonth = vacation?.seasonality.monthly.reduce(
     (best, m) => (m.vacationReliabilityScore > best.vacationReliabilityScore ? m : best),
     vacation.seasonality.monthly[0]
@@ -670,12 +700,14 @@ function DestinationCard({ city, rank }: { city: City; rank: number }) {
           <span className="val">{city.swimmability} / 10</span>
         </div>
         <div className="metricBox">
-          <span className="label">Nightlife Density</span>
-          <span className="val">{city.nightlifeDensity} / km²</span>
+          <span className="label">Airport Ease</span>
+          <span className="val" title={airportEase.tag}>
+            {airportEase.label} {airportEase.dist != null ? `(${airportEase.dist}km)` : ''}
+          </span>
         </div>
         <div className="metricBox">
-          <span className="label">10-Min Walk Bars</span>
-          <span className="val">{city.barsWithin10MinWalk} venues</span>
+          <span className="label">Nightlife Density</span>
+          <span className="val">{city.nightlifeDensity} / km²</span>
         </div>
         <div className="metricBox">
           <span className="label">Local Monthly Cost</span>
@@ -776,16 +808,16 @@ function DestinationCard({ city, rank }: { city: City; rank: number }) {
                 <strong>{vacation?.arrival.nearestAirport ?? '—'} ({formatNumber(vacation?.arrival.airportDistanceKm, 'km')})</strong>
               </div>
               <div className="subMetricBox">
+                <span>Airport Ease Rating</span>
+                <strong>{airportEase.label} ({airportEase.score}/10)</strong>
+              </div>
+              <div className="subMetricBox">
                 <span>Arrival Friction</span>
                 <strong>{formatNumber(vacation?.arrival.arrivalFrictionScore, ' / 100')}</strong>
               </div>
               <div className="subMetricBox">
                 <span>US Safety Advisory</span>
                 <strong>{vacation?.arrival.safetyAdvisory?.level ? `Level ${vacation.arrival.safetyAdvisory.level}` : '—'}</strong>
-              </div>
-              <div className="subMetricBox">
-                <span>Peak Month Weather</span>
-                <strong>{bestMonth ? `${bestMonth.label} (${bestMonth.vacationReliabilityScore}/100)` : '—'}</strong>
               </div>
             </div>
           )}

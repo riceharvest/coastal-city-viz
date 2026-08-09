@@ -20,7 +20,7 @@ if (start === -1 || end === -1) {
     errors.push(`vacationData is not parseable JSON: ${error.message}`);
   }
 
-  if (records.length !== 40) errors.push(`Expected 40 vacation records, got ${records.length}`);
+  if (records.length !== 52) errors.push(`Expected 52 vacation records, got ${records.length}`);
   const keys = new Set();
   for (const record of records) {
     const label = record.key ?? record.city ?? 'unknown';
