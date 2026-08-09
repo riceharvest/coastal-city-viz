@@ -598,21 +598,21 @@ function App() {
             </div>
             <ResponsiveContainer width="100%" height={340}>
               <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
+                <CartesianGrid stroke="#e2e8f0" />
                 <XAxis
                   type="number"
                   dataKey="internationalPct"
                   name="Foreign Tourists"
                   unit="%"
                   domain={[0, 50]}
-                  stroke="#94a3b8"
+                  stroke="#64748b"
                 />
                 <YAxis
                   type="number"
                   dataKey="nightlifeDensity"
                   name="Nightlife Density"
                   unit="/km²"
-                  stroke="#94a3b8"
+                  stroke="#64748b"
                 />
                 <ZAxis type="number" dataKey="swimmability" range={[60, 240]} />
                 <Tooltip content={<ScatterTooltip />} />
@@ -632,12 +632,12 @@ function App() {
             </div>
             <ResponsiveContainer width="100%" height={340}>
               <BarChart data={filtered.slice(0, 12)} margin={{ top: 20, right: 20, bottom: 60, left: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-                <XAxis dataKey="city" angle={-35} textAnchor="end" stroke="#94a3b8" interval={0} height={70} />
-                <YAxis stroke="#94a3b8" domain={[0, 10]} />
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12 }} />
+                <CartesianGrid stroke="#e2e8f0" />
+                <XAxis dataKey="city" angle={-35} textAnchor="end" stroke="#64748b" interval={0} height={70} />
+                <YAxis stroke="#64748b" domain={[0, 10]} />
+                <Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #cbd5e1', borderRadius: 12, color: '#0f172a', boxShadow: '0 8px 25px rgba(0,0,0,0.08)' }} />
                 <Legend />
-                <Bar dataKey="beachQualityScore" name="Beach Quality" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="beachQualityScore" name="Beach Quality" fill="#0284c7" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="waterCleanlinessScore" name="Water Cleanliness" fill="#10b981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -682,9 +682,9 @@ function App() {
             </div>
             <ResponsiveContainer width="100%" height={320}>
               <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 0 }}>
-                <CartesianGrid stroke="rgba(255,255,255,0.08)" />
-                <XAxis type="number" dataKey={(c) => scoreCity(c as City)} name="Fit Score" domain={[0, 100]} stroke="#94a3b8" />
-                <YAxis type="number" dataKey="arrivalFrictionScore" name="Arrival Friction" domain={[0, 100]} stroke="#94a3b8" />
+                <CartesianGrid stroke="#e2e8f0" />
+                <XAxis type="number" dataKey={(c) => scoreCity(c as City)} name="Fit Score" domain={[0, 100]} stroke="#64748b" />
+                <YAxis type="number" dataKey="arrivalFrictionScore" name="Arrival Friction" domain={[0, 100]} stroke="#64748b" />
                 <Tooltip content={<ArrivalScatterTooltip />} />
                 <Scatter data={arrivalChart}>
                   {arrivalChart.map((entry) => (

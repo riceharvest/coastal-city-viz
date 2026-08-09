@@ -1,7 +1,7 @@
 :root {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #f3f4f6;
-  background-color: #080c14;
+  color: #0f172a;
+  background-color: #f8fafc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,10 +16,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.12), transparent 45rem),
-    radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.08), transparent 45rem),
-    #080c14;
-  color: #f3f4f6;
+    radial-gradient(circle at 10% 10%, rgba(2, 132, 199, 0.04), transparent 40rem),
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.04), transparent 40rem),
+    #f8fafc;
+  color: #0f172a;
 }
 
 button, select, input {
@@ -27,11 +27,12 @@ button, select, input {
 }
 
 code {
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  padding: 2px 6px;
+  color: #0284c7;
+  background: #e0f2fe;
+  padding: 2px 8px;
   border-radius: 6px;
   font-size: 0.9em;
+  font-weight: 600;
 }
 
 /* Shell & Layout */
@@ -46,7 +47,7 @@ code {
   align-items: center;
   justify-content: space-between;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .brand {
@@ -56,37 +57,37 @@ code {
 }
 
 .brandIcon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0284c7, #10b981);
+  background: linear-gradient(135deg, #0284c7, #0d9488);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
 }
 
 .brandTitle {
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #f9fafb;
+  color: #0f172a;
 }
 
 .brandSubtitle {
   font-size: 12px;
-  color: #9ca3af;
+  color: #64748b;
 }
 
 /* Main View Tabs */
 .viewTabs {
   display: flex;
   gap: 6px;
-  background: rgba(17, 24, 39, 0.8);
+  background: #f1f5f9;
   padding: 4px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
 .tabBtn {
@@ -97,7 +98,7 @@ code {
   border-radius: 10px;
   border: none;
   background: transparent;
-  color: #9ca3af;
+  color: #64748b;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -105,14 +106,14 @@ code {
 }
 
 .tabBtn:hover {
-  color: #f3f4f6;
-  background: rgba(255, 255, 255, 0.04);
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .tabBtn.active {
   background: #0284c7;
   color: #ffffff;
-  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.4);
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.3);
 }
 
 /* Hero Section */
@@ -124,36 +125,34 @@ code {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #38bdf8;
+  color: #0284c7;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 12px;
-  background: rgba(56, 189, 248, 0.1);
-  padding: 4px 10px;
+  background: #e0f2fe;
+  padding: 4px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  border: 1px solid #bae6fd;
 }
 
 .hero h1 {
-  font-size: clamp(32px, 5vw, 56px);
-  line-height: 1.05;
+  font-size: clamp(32px, 4.5vw, 52px);
+  line-height: 1.1;
   letter-spacing: -0.04em;
   margin: 0;
   max-width: 900px;
   font-weight: 900;
-  background: linear-gradient(180deg, #ffffff 30%, #cbd5e1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0f172a;
 }
 
 .hero p {
-  color: #94a3b8;
+  color: #475569;
   font-size: 16px;
   line-height: 1.6;
   max-width: 800px;
-  margin: 16px 0 0;
+  margin: 14px 0 0;
 }
 
 .heroStats {
@@ -164,23 +163,22 @@ code {
 }
 
 .statCard {
-  background: rgba(17, 24, 39, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 18px;
   padding: 16px 18px;
   display: flex;
   align-items: center;
   gap: 14px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .statIcon {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: #e0f2fe;
+  color: #0284c7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,15 +191,15 @@ code {
 }
 
 .statLabel {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .statValue {
-  color: #f9fafb;
+  color: #0f172a;
   font-size: 20px;
   font-weight: 800;
   margin-top: 2px;
@@ -209,13 +207,12 @@ code {
 
 /* Control Panel & Search */
 .controlPanel {
-  background: rgba(17, 24, 39, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
-  padding: 20px;
+  padding: 22px;
   margin-top: 20px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
 }
 
 .presetRow {
@@ -228,18 +225,18 @@ code {
 
 .presetLabel {
   font-size: 11px;
-  font-weight: 700;
-  color: #9ca3af;
+  font-weight: 800;
+  color: #64748b;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin-right: 4px;
 }
 
 .presetPillBtn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
-  padding: 6px 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
@@ -251,15 +248,16 @@ code {
 }
 
 .presetPillBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
 .presetPillBtn.active {
-  background: rgba(56, 189, 248, 0.18);
-  border-color: rgba(56, 189, 248, 0.4);
-  color: #38bdf8;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
 }
 
 .searchBar {
@@ -272,7 +270,7 @@ code {
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: #64748b;
   width: 18px;
   height: 18px;
   pointer-events: none;
@@ -281,19 +279,20 @@ code {
 .searchInput {
   width: 100%;
   height: 46px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
   padding: 0 16px 0 42px;
-  color: #f3f4f6;
+  color: #0f172a;
   font-size: 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  border-color: #0284c7;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
 }
 
 .primaryFilters {
@@ -310,40 +309,40 @@ code {
 }
 
 .filterGroup label {
-  color: #cbd5e1;
+  color: #334155;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   justify-content: space-between;
 }
 
 .filterGroup label span.val {
-  color: #38bdf8;
-  font-weight: 700;
+  color: #0284c7;
+  font-weight: 800;
 }
 
 .selectInput {
   height: 42px;
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 10px;
   padding: 0 12px;
-  color: #f3f4f6;
+  color: #0f172a;
   font-size: 13px;
   cursor: pointer;
 }
 
 .selectInput:focus {
   outline: none;
-  border-color: #38bdf8;
+  border-color: #0284c7;
 }
 
 input[type='range'] {
   width: 100%;
   height: 6px;
-  background: #1e293b;
+  background: #e2e8f0;
   border-radius: 999px;
-  accent-color: #38bdf8;
+  accent-color: #0284c7;
   cursor: pointer;
 }
 
@@ -351,11 +350,11 @@ input[type='range'] {
   height: 42px;
   padding: 0 16px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #e5e7eb;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -365,20 +364,20 @@ input[type='range'] {
 }
 
 .advancedToggleBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
 .advancedToggleBtn.active {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: rgba(56, 189, 248, 0.3);
-  color: #38bdf8;
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
 }
 
 .advancedDrawer {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #e2e8f0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
@@ -392,19 +391,19 @@ input[type='range'] {
 }
 
 .resetBtn {
-  background: transparent;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #f87171;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
 .resetBtn:hover {
-  background: rgba(239, 68, 68, 0.15);
+  background: #fee2e2;
 }
 
 /* Card List Layout */
@@ -416,18 +415,17 @@ input[type='range'] {
 }
 
 .destCard {
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 22px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .destCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .destCardHeader {
@@ -444,11 +442,11 @@ input[type='range'] {
 }
 
 .rankBadge {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: #e0f2fe;
+  color: #0284c7;
   font-weight: 800;
   font-size: 14px;
   display: flex;
@@ -461,13 +459,13 @@ input[type='range'] {
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #f9fafb;
+  color: #0f172a;
   margin: 0;
 }
 
 .citySub {
   font-size: 13px;
-  color: #9ca3af;
+  color: #64748b;
   margin-top: 2px;
 }
 
@@ -492,32 +490,32 @@ input[type='range'] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 6px 12px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 6px 14px;
   border-radius: 12px;
-  min-width: 68px;
+  min-width: 72px;
 }
 
 .fitScoreBadge .scoreNum {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 900;
-  color: #38bdf8;
+  color: #0284c7;
   line-height: 1;
 }
 
 .fitScoreBadge .scoreLabel {
   font-size: 9px;
   text-transform: uppercase;
-  color: #94a3b8;
-  font-weight: 600;
+  color: #64748b;
+  font-weight: 700;
   margin-top: 2px;
 }
 
 .cardNotes {
-  color: #d1d5db;
+  color: #334155;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
   margin: 14px 0 16px;
 }
 
@@ -530,12 +528,12 @@ input[type='range'] {
 
 .tagPill {
   font-size: 11px;
-  color: #7dd3fc;
-  background: rgba(56, 189, 248, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.18);
+  color: #0284c7;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
   padding: 4px 10px;
   border-radius: 999px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Stat Grid Inside Cards */
@@ -546,34 +544,34 @@ input[type='range'] {
 }
 
 .metricBox {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
-  padding: 10px 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .metricBox .label {
-  color: #9ca3af;
+  color: #64748b;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .metricBox .val {
-  color: #f3f4f6;
+  color: #0f172a;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 /* Card Detail Section (Tabs) */
 .cardAccordion {
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid #e2e8f0;
 }
 
 .accordionHeader {
@@ -588,32 +586,33 @@ input[type='range'] {
 }
 
 .detailTabBtn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
-  color: #9ca3af;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .detailTabBtn:hover {
-  color: #f3f4f6;
-  background: rgba(255, 255, 255, 0.08);
+  color: #0f172a;
+  background: #e2e8f0;
 }
 
 .detailTabBtn.active {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: rgba(56, 189, 248, 0.3);
-  color: #38bdf8;
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+  font-weight: 700;
 }
 
 .detailPanel {
   margin-top: 12px;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 16px;
 }
@@ -625,30 +624,32 @@ input[type='range'] {
 }
 
 .subMetricBox {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
-  padding: 8px 10px;
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
 .subMetricBox span {
-  color: #9ca3af;
+  color: #64748b;
   font-size: 10px;
   text-transform: uppercase;
+  font-weight: 700;
 }
 
 .subMetricBox strong {
-  color: #e5e7eb;
+  color: #0f172a;
   font-size: 13px;
+  font-weight: 800;
 }
 
 .evidenceBlock p {
   font-size: 13px;
-  color: #cbd5e1;
-  line-height: 1.5;
+  color: #334155;
+  line-height: 1.55;
   margin: 6px 0;
 }
 
@@ -660,18 +661,19 @@ input[type='range'] {
 }
 
 .sourceLink {
-  color: #38bdf8;
+  color: #0284c7;
   font-size: 11px;
+  font-weight: 600;
   text-decoration: none;
-  background: rgba(56, 189, 248, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.18);
-  padding: 4px 8px;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  padding: 4px 10px;
   border-radius: 6px;
   transition: background 0.15s ease;
 }
 
 .sourceLink:hover {
-  background: rgba(56, 189, 248, 0.2);
+  background: #bae6fd;
 }
 
 /* Analytics View */
@@ -684,12 +686,11 @@ input[type='range'] {
 }
 
 .chartCard {
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 22px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .chartCardFull {
@@ -702,35 +703,35 @@ input[type='range'] {
 
 .chartHeader h2 {
   font-size: 18px;
-  font-weight: 700;
-  color: #f9fafb;
+  font-weight: 800;
+  color: #0f172a;
   margin: 0;
 }
 
 .chartHeader p {
   font-size: 13px;
-  color: #9ca3af;
+  color: #64748b;
   margin: 4px 0 0;
 }
 
 .customTooltip {
-  background: #0f172a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
   padding: 12px 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 .customTooltip strong {
-  color: #f3f4f6;
+  color: #0f172a;
   font-size: 14px;
 }
 
 .customTooltip span {
-  color: #cbd5e1;
+  color: #334155;
   font-size: 12px;
 }
 
@@ -755,15 +756,16 @@ input[type='range'] {
 }
 
 .heatmapHeaderRow span {
-  color: #9ca3af;
+  color: #64748b;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
 }
 
 .heatmapDataRow strong {
-  color: #e5e7eb;
+  color: #0f172a;
   font-size: 12px;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -776,29 +778,30 @@ input[type='range'] {
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Methodology / Audit Section */
 .auditSection {
-  background: rgba(17, 24, 39, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 28px;
   margin-top: 20px;
   margin-bottom: 60px;
-  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .auditSection h2 {
   font-size: 24px;
   font-weight: 800;
-  color: #f9fafb;
+  color: #0f172a;
   margin: 0 0 16px;
 }
 
 .auditSection p {
-  color: #94a3b8;
+  color: #475569;
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 16px;
@@ -812,32 +815,33 @@ input[type='range'] {
 }
 
 .formulaCard {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 16px;
 }
 
 .formulaCard h3 {
   font-size: 15px;
-  color: #38bdf8;
+  color: #0284c7;
   margin: 0 0 8px;
+  font-weight: 800;
 }
 
 .formulaCard p {
   font-size: 12px;
-  color: #cbd5e1;
+  color: #334155;
   margin: 0;
   line-height: 1.5;
 }
 
 .emptyState {
-  background: rgba(17, 24, 39, 0.6);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
   border-radius: 20px;
   padding: 40px;
   text-align: center;
-  color: #9ca3af;
+  color: #64748b;
   font-size: 15px;
   margin-top: 20px;
 }
