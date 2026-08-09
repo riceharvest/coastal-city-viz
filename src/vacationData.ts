@@ -284,9 +284,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -1004,9 +1004,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -4239,9 +4239,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -4599,9 +4599,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -4959,9 +4959,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -5319,9 +5319,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -9992,9 +9992,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -14394,22 +14394,22 @@ export const vacationData = [
     },
     "seasonality": {
       "bestMonths": [
-        "Jan"
-      ],
-      "shoulderMonths": [
+        "Nov",
+        "Dec",
+        "Jan",
         "Feb",
         "Mar",
-        "Dec"
+        "Apr"
+      ],
+      "shoulderMonths": [
+        "May",
+        "Oct"
       ],
       "avoidMonths": [
-        "Apr",
-        "May",
         "Jun",
         "Jul",
         "Aug",
-        "Sep",
-        "Oct",
-        "Nov"
+        "Sep"
       ],
       "monthly": [
         {
@@ -14660,9 +14660,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -14754,13 +14754,10 @@ export const vacationData = [
     },
     "seasonality": {
       "bestMonths": [
+        "Dec",
         "Jan",
         "Feb",
-        "Mar",
-        "Apr",
-        "Jun",
-        "Aug",
-        "Dec"
+        "Mar"
       ],
       "shoulderMonths": [
         "May",
@@ -15020,9 +15017,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -15380,9 +15377,9 @@ export const vacationData = [
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {
         "source": "US State Dept",
-        "level": 2,
-        "label": "Exercise increased caution",
-        "safetyHassleScore": 25,
+        "level": 1,
+        "label": "Exercise normal precautions",
+        "safetyHassleScore": 5,
         "sourceUrl": "https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/"
       },
       "visa": {
@@ -16181,10 +16178,10 @@ export const vacationData = [
     }
   },
   {
-    "key": "Philippines::Boracay::",
+    "key": "Philippines::Boracay::White Beach Station 2 / D'Mall central corridor",
     "city": "Boracay",
     "country": "Philippines",
-    "district": "",
+    "district": "White Beach Station 2 / D'Mall central corridor",
     "coordinate": {
       "lat": 11.96791,
       "lon": 121.91999,
@@ -16193,22 +16190,23 @@ export const vacationData = [
       "sourceType": "OpenStreetMap Nominatim generated coordinate; representative core requires review for broad island rows."
     },
     "seasonality": {
-      "bestMonths": [],
-      "shoulderMonths": [
+      "bestMonths": [
+        "Dec",
+        "Jan",
         "Feb",
         "Mar",
         "Apr",
         "May"
       ],
-      "avoidMonths": [
-        "Jan",
+      "shoulderMonths": [
         "Jun",
+        "Nov"
+      ],
+      "avoidMonths": [
         "Jul",
         "Aug",
         "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
+        "Oct"
       ],
       "monthly": [
         {
@@ -16809,11 +16807,11 @@ export const vacationData = [
       "method": "Open-Meteo historical daily weather plus marine daily wave-height max/sea-surface temperature; deterministic proxy scoring."
     },
     "arrival": {
-      "nearestAirport": "BAG",
-      "nearestAirportName": "Loakan Airport",
-      "airportDistanceKm": 44,
-      "airportDistanceScore": 18,
-      "arrivalFrictionScore": 20,
+      "nearestAirport": "CYZ",
+      "nearestAirportName": "Cauayan Airport",
+      "airportDistanceKm": 153,
+      "airportDistanceScore": 61,
+      "arrivalFrictionScore": 52,
       "transferMinutes": null,
       "transferTimeStatus": "unknown-route-source-required",
       "safetyAdvisory": {

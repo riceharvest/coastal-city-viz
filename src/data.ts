@@ -67,11 +67,11 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'top pick',
     tags: ['best-balance', 'domestic-weekends', 'compact-core', 'shallow-water'],
-    notes: 'Research verified: Excellent domestic Bangkok weekend atmosphere; ocean water is safe but cloudy/murky rather than clear blue.',
+    notes: 'Editorial estimate: Excellent domestic Bangkok weekend atmosphere; ocean water is safe but cloudy/murky rather than clear blue.',
     sourceUrls: [
       'https://www.tourismthailand.org/Destinations/Provinces/Prachuap%20Khiri%20Khan/231',
       'https://www.mots.go.th/news/category/758',
-      'https://www.numbeo.com/cost-of-living/in/Hua-Hin-Thailand',
+      'https://www.numbeo.com/cost-of-living/in/Hua-Hin',
     ],
   },
   {
@@ -103,7 +103,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'top pick',
     tags: ['lowest-international', 'domestic-weekends', 'hcmc-access', 'rip-current-warning'],
-    notes: 'Research verified: Extremely local Vietnamese weekend destination (<3% foreign); water is swimmable but rip currents require caution.',
+    notes: 'Editorial estimate: Extremely local Vietnamese weekend destination (<3% foreign); water is swimmable but rip currents require caution.',
     sourceUrls: [
       'https://vir.com.vn/ba-ria-vung-tau-eyes-tourism-advances-122038-122038.html',
       'https://en.wikivoyage.org/wiki/Vung_Tau',
@@ -138,7 +138,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'top pick',
     tags: ['very-local', 'student-energy', 'weekend-crowded', 'murky-water-caveat'],
-    notes: 'Research verified: Pure Thai domestic crowd and great beach promenade food, but ocean water clarity is low.',
+    notes: 'Editorial estimate: Pure Thai domestic crowd and great beach promenade food, but ocean water clarity is low.',
     sourceUrls: [
       'https://www.tourismthailand.org/Attraction/bang-saen-beach',
     ],
@@ -172,10 +172,10 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'top pick',
     tags: ['swimmable', 'compact-strip', 'domestic-majority', 'island', 'duty-free'],
-    notes: 'Research verified: Domestic-heavy Malaysian island with duty-free drinks and good swimmable beach strip.',
+    notes: 'Editorial estimate: Domestic-heavy Malaysian island with duty-free drinks and good swimmable beach strip.',
     sourceUrls: [
       'https://www.lada.gov.my/en/statistics/',
-      'https://www.numbeo.com/cost-of-living/in/Langkawi',
+      'https://www.numbeo.com/cost-of-living/in/Langkawi-Malaysia',
     ],
   },
   {
@@ -207,7 +207,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'top pick',
     tags: ['best-nightlife-density', 'swimmable', 'urban-beach', 'higher-international'],
-    notes: 'Research verified: Excellent urban beach nightlife, though winter monsoon brings rougher water and international tourist count is high.',
+    notes: 'Editorial estimate: Excellent urban beach nightlife, though winter monsoon brings rougher water and international tourist count is high.',
     sourceUrls: [
       'https://vietnamtourism.gov.vn/en/post/20745',
       'https://en.wikivoyage.org/wiki/Nha_Trang',
@@ -242,7 +242,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['excellent-beach', 'compact-grid', 'nomad-heavy', 'higher-international'],
-    notes: 'Research verified: Clean wide beach and lively An Thuong nomad bar grid, though foreign presence is prominent.',
+    notes: 'Editorial estimate: Clean wide beach and lively An Thuong nomad bar grid, though foreign presence is prominent.',
     sourceUrls: [
       'https://en.baodanang.vn/da-nang-welcomes-12-8-million-visitors-in-8-months-of-2025-3300752.html',
     ],
@@ -276,7 +276,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['compact-social-core', 'surf', 'nomad-hub', 'surf-reef-caveat'],
-    notes: 'Research verified: Iconic surf vibe & rotating nightlife; GL town tidal reef flats require water shoes for wading.',
+    notes: 'Editorial estimate: Iconic surf vibe & rotating nightlife; GL town tidal reef flats require water shoes for wading.',
     sourceUrls: [
       'https://www.foi.gov.ph/agencies/dot/siargao-tourism-statistics/',
     ],
@@ -310,7 +310,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['city-break', 'sunset-beach', 'domestic-majority', 'split-nodes'],
-    notes: 'Research verified: Great sunsets and seafood; island boat trips needed for crystal clear swimming.',
+    notes: 'Editorial estimate: Great sunsets and seafood; island boat trips needed for crystal clear swimming.',
     sourceUrls: [
       'https://sabahtourism.com/statistics/',
     ],
@@ -344,7 +344,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['excellent-beach', 'domestic-majority', 'spread-out-nightlife', 'island'],
-    notes: 'Research verified: Excellent dry-season swimming on Sao/Long beach; plastic waste can affect western shores in monsoon.',
+    notes: 'Editorial estimate: Excellent dry-season swimming on Sao/Long beach; plastic waste can affect western shores in monsoon.',
     sourceUrls: [
       'https://vietnamnews.vn/travel/1688354/kien-giang-welcomes-9-8-million-tourists-in-2024.html',
     ],
@@ -378,7 +378,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['classic-beach-nightlife', 'swimmable', 'compact-strip', 'too-international'],
-    notes: 'Research verified: Beautiful white sand and lively beach bars; sea urchins and boat traffic near shore.',
+    notes: 'Editorial estimate: Beautiful white sand and lively beach bars; sea urchins and boat traffic near shore.',
     sourceUrls: [
       'https://ppdo.bohol.gov.ph/profile/socio-economic-profile/economic-development/tourism/visitor-arrivals/',
     ],
@@ -412,7 +412,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['beautiful-beaches', 'compact-core', 'surfer-backpacker', 'foreign-visible'],
-    notes: 'Research verified: Outstanding turquoise bays nearby (Tanjung Aan); town has a great laid-back surf bar scene.',
+    notes: 'Editorial estimate: Outstanding turquoise bays nearby (Tanjung Aan); town has a great laid-back surf bar scene.',
     sourceUrls: [
       'https://lomboktengahkab.bps.go.id/',
     ],
@@ -514,7 +514,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'weak fit',
     tags: ['dense-nightlife', 'weak-beach', 'too-international', 'benchmark'],
-    notes: 'Research verified: Ultra-dense nightlife, but main ocean beach water quality is poor.',
+    notes: 'Editorial estimate: Ultra-dense nightlife, but main ocean beach water quality is poor.',
     sourceUrls: [
       'https://www.citypopulation.de/en/thailand/eastern/chonburi/2099__pattaya/',
     ],
@@ -548,7 +548,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'weak fit',
     tags: ['very-local', 'swimmable', 'quiet', 'low-nightlife-density'],
-    notes: 'Research verified: Bangkok domestic weekend market; peaceful shallow beach, low nightlife density.',
+    notes: 'Editorial estimate: Bangkok domestic weekend market; peaceful shallow beach, low nightlife density.',
     sourceUrls: [
       'https://www.tourismthailand.org/Destinations/Provinces/Phetchaburi/228',
     ],
@@ -582,7 +582,7 @@ export const cities: City[] = [
     confidence: 'low',
     verdict: 'weak fit',
     tags: ['compact-bars', 'domestic-majority', 'mediocre-beach', 'expat-skew'],
-    notes: 'Research verified: Industrial bay setting limits ocean swimmability; active expat bar scene.',
+    notes: 'Editorial estimate: Industrial bay setting limits ocean swimmability; active expat bar scene.',
     sourceUrls: [
       'https://www.citypopulation.de/en/philippines/luzon/admin/zambales/037107__olongapo/',
     ],
@@ -616,7 +616,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'weak fit',
     tags: ['excellent-beach', 'very-local', 'quiet-nightlife'],
-    notes: 'Research verified: Pristine granite boulder beaches with crystal clear water; quiet evening scene (<3% foreign).',
+    notes: 'Editorial estimate: Pristine granite boulder beaches with crystal clear water; quiet evening scene (<3% foreign).',
     sourceUrls: [
       'https://babel.bps.go.id/',
     ],
@@ -1024,7 +1024,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'reject',
     tags: ['international-hub', 'beach-adjacent', 'dense-nightlife', 'surf-not-swim'],
-    notes: 'Research verified: Premier surf break & beach clubs, but ocean swimming is hazardous due to rip currents and seasonal plastic.',
+    notes: 'Editorial estimate: Premier surf break & beach clubs, but ocean swimming is hazardous due to rip currents and seasonal plastic.',
     sourceUrls: [
       'https://bali.bps.go.id/',
     ],
@@ -1432,7 +1432,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'top pick',
     tags: ['swimmable', 'beach-bars', 'limestone-karst', 'island-hopping'],
-    notes: 'Research verified: Highly rated for clear emerald karst swimming & compact Ao Nang beach-road nightlife.',
+    notes: 'Editorial estimate: Highly rated for clear emerald karst swimming & compact Ao Nang beach-road nightlife.',
     sourceUrls: [
       'https://www.mots.go.th/',
       'https://en.wikivoyage.org/wiki/Ao_Nang',
@@ -1467,7 +1467,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['beach-party', 'swimmable', 'island', 'full-moon'],
-    notes: 'Research verified: Pristine island swimmability and intense beach nightlife.',
+    notes: 'Editorial estimate: Pristine island swimmability and intense beach nightlife.',
     sourceUrls: [
       'https://www.mots.go.th/',
       'https://en.wikivoyage.org/wiki/Ko_Pha_Ngan',
@@ -1502,7 +1502,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['chill-vibe', 'swimmable', 'island', 'beach-bars'],
-    notes: 'Research verified: Great swimmable beaches and laid-back beach bars.',
+    notes: 'Editorial estimate: Great swimmable beaches and laid-back beach bars.',
     sourceUrls: [
       'https://www.mots.go.th/',
       'https://en.wikivoyage.org/wiki/Ko_Chang',
@@ -1537,7 +1537,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['domestic-heavy', 'beach-bars', 'kitesurfing', 'seafood'],
-    notes: 'Research verified: Easy Saigon access via highway; morning glass-like swim, afternoon kitesurfing wind.',
+    notes: 'Editorial estimate: Easy Saigon access via highway; morning glass-like swim, afternoon kitesurfing wind.',
     sourceUrls: [
       'https://vietnamtourism.gov.vn/',
       'https://en.wikivoyage.org/wiki/Mui_Ne',
@@ -1572,7 +1572,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'top pick',
     tags: ['low-foreigners', 'swimmable', 'authentic-local', 'affordable'],
-    notes: 'Research verified: Standout hidden gem (<3% foreign tourists according to official 2024/2025 Binh Dinh statistics); crystal clear water.',
+    notes: 'Editorial estimate: Standout hidden gem (<3% foreign tourists according to official 2024/2025 Binh Dinh statistics); crystal clear water.',
     sourceUrls: [
       'https://vietnamtourism.gov.vn/',
       'https://en.wikivoyage.org/wiki/Quy_Nhon',
@@ -1607,7 +1607,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['top-beach', 'dense-nightlife', 'walkable-beach', 'white-sand'],
-    notes: 'Research verified: Global benchmark for white sand swimmability and beachfront nightlife density.',
+    notes: 'Editorial estimate: Global benchmark for white sand swimmability and beachfront nightlife density.',
     sourceUrls: [
       'https://psa.gov.ph/',
       'https://en.wikivoyage.org/wiki/Boracay',
@@ -1642,7 +1642,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'top pick',
     tags: ['low-foreigners', 'surf-culture', 'domestic-weekend', 'vibrant-bars'],
-    notes: 'Research verified: Major domestic Manila weekend surf & party hub (85% domestic crowd); grey sand surf break waves.',
+    notes: 'Editorial estimate: Major domestic Manila weekend surf & party hub (85% domestic crowd); grey sand surf break waves.',
     sourceUrls: [
       'https://psa.gov.ph/',
       'https://en.wikivoyage.org/wiki/San_Juan_(La_Union)',
@@ -1677,7 +1677,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['island-hopping', 'limestone', 'beach-bars', 'scenic'],
-    notes: 'Research verified: Spectacular karst landscape & sunset bars; Nacpan beach is world-class swimmable.',
+    notes: 'Editorial estimate: Spectacular karst landscape & sunset bars; Nacpan beach is world-class swimmable.',
     sourceUrls: [
       'https://psa.gov.ph/',
       'https://en.wikivoyage.org/wiki/El_Nido',
@@ -1712,7 +1712,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'possible',
     tags: ['car-free', 'turquoise-water', 'nightlife-island', 'walkable'],
-    notes: 'Research verified: Ultimate car-free party island with crystal clear swimmable waters; foreign-heavy.',
+    notes: 'Editorial estimate: Ultimate car-free party island with crystal clear swimmable waters; foreign-heavy.',
     sourceUrls: [
       'https://bps.go.id/',
       'https://en.wikivoyage.org/wiki/Gili_Trawangan',
@@ -1747,7 +1747,7 @@ export const cities: City[] = [
     confidence: 'high',
     verdict: 'top pick',
     tags: ['top-beach', 'crystal-water', 'island-vibe', 'relaxing-nightlife'],
-    notes: 'Research verified: World-class turquoise swimmability paired with relaxed beachfront bar life; island closes during winter monsoon (Nov-Feb).',
+    notes: 'Editorial estimate: World-class turquoise swimmability paired with relaxed beachfront bar life; island closes during winter monsoon (Nov-Feb).',
     sourceUrls: [
       'https://www.dosm.gov.my/',
       'https://en.wikivoyage.org/wiki/Perhentian_Islands',
@@ -1782,7 +1782,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'weak fit',
     tags: ['urban-nightlife', 'weekend-getaway', 'resort-access'],
-    notes: 'Research verified: Active urban nightlife, but beaches face industrial shipping strait and are separate from bar district.',
+    notes: 'Editorial estimate: Active urban nightlife, but beaches face industrial shipping strait and are separate from bar district.',
     sourceUrls: [
       'https://bps.go.id/',
       'https://en.wikivoyage.org/wiki/Batam',
@@ -1817,7 +1817,7 @@ export const cities: City[] = [
     confidence: 'medium',
     verdict: 'possible',
     tags: ['low-foreigners', 'calm-water', 'chill-vibe', 'domestic-heavy'],
-    notes: 'Research verified: Quiet, highly domestic Malaysian island retreat with peaceful swimmable beaches and low-key evening life.',
+    notes: 'Editorial estimate: Quiet, highly domestic Malaysian island retreat with peaceful swimmable beaches and low-key evening life.',
     sourceUrls: [
       'https://www.dosm.gov.my/',
       'https://en.wikivoyage.org/wiki/Pangkor',

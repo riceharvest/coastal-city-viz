@@ -119,7 +119,7 @@ function getAirportEase(city: City) {
   if (dist == null) return { label: 'Unknown', dist: null };
 
   const isFerryIsland =
-    city.tags.includes('island') &&
+    (city.tags.includes('island') || city.city.includes('Gili') || city.city.includes('Perhentian')) &&
     (city.city.includes('Gili') || city.city.includes('Perhentian') || city.city.includes('Phangan'));
 
   if (isFerryIsland) {
@@ -214,8 +214,8 @@ function MapView({ cities }: { cities: City[] }) {
             <strong style="color: #0284c7; font-size: 14px;">Fit ${fitScore}/100</strong>
           </div>
           <div style="font-size: 11px; color: #334155; line-height: 1.5; border-top: 1px solid #e2e8f0; padding-top: 6px;">
-            👥 Foreign: <b>${city.internationalPct}%</b> | 🏊 Swim: <b>${city.swimmability}/10</b><br/>
-            🍸 Density: <b>${city.nightlifeDensity}/km²</b> | 💰 <b>${money(city.monthlyLocalCostUsd)}</b>
+            👥 Estimated visitor mix: <b>${city.internationalPct}%</b> | 🏊 Swim proxy: <b>${city.swimmability}/10</b><br/>
+            🍸 Estimated density: <b>${city.nightlifeDensity}/km²</b> | 💰 <b>${money(city.monthlyLocalCostUsd)} estimate</b>
           </div>
         </div>
       `;
@@ -464,14 +464,14 @@ function App() {
 
       {/* Hero */}
       <section className="hero">
-        <h2>Find swimmable beaches with dense nightlife & lower foreign share</h2>
+        <h2>Find swimmable beaches with dense nightlife & lower estimated visitor mix</h2>
         <p>
-          Source-backed comparison of 52 Southeast Asian coastal destinations.
+          Comparison of 52 Southeast Asian coastal destinations using editorial estimates and generated proxies.
         </p>
 
         <div className="heroSummary">
           <span><MapPin size={14} /> Showing <b>{filtered.length}</b> of {cities.length} places</span>
-          <span><Beer size={14} /> <b>{denseAndSwimmable}</b> dense + swimmable</span>
+          <span><Beer size={14} /> <b>{denseAndSwimmable}</b> estimated dense + swimmable</span>
           <span><Waves size={14} /> <b>{topPicksCount}</b> top picks</span>
         </div>
       </section>
@@ -552,7 +552,7 @@ function App() {
 
           <div className="field">
             <label>
-              Max Foreign % <b>{maxInternational}%</b>
+              Max estimated visitor mix <b>{maxInternational}%</b>
             </label>
             <input
               type="range"
@@ -598,13 +598,13 @@ function App() {
             </div>
             <RangeField label="Max Monthly Budget" value={maxMonthlyCost} min={400} max={1500} step={50} onChange={setMaxMonthlyCost} prefix="$" />
             <RangeField label="Min Walkability" value={minWalkability} min={0} max={10} step={0.5} onChange={setMinWalkability} suffix="/10" />
-            <RangeField label="Max Airport Distance" value={maxAirportDistance} min={10} max={200} step={10} onChange={setMaxAirportDistance} suffix="km" />
-            <RangeField label="Min 10m-Walk Bars" value={minBarsWithin10Walk} min={0} max={60} step={5} onChange={setMinBarsWithin10Walk} />
+            <RangeField label="Max straight-line airport distance" value={maxAirportDistance} min={10} max={200} step={10} onChange={setMaxAirportDistance} suffix="km" />
+            <RangeField label="Min estimated 10m-walk bars" value={minBarsWithin10Walk} min={0} max={60} step={5} onChange={setMinBarsWithin10Walk} />
             <RangeField label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
             <RangeField label="Min Evening Beach" value={minEveningBeachLife} min={0} max={10} step={0.5} onChange={setMinEveningBeachLife} suffix="/10" />
             <RangeField label="Min Clean Water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
             <RangeField label="Max Bar Cluster Radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
-            <RangeField label="Min Nightlife Density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
+            <RangeField label="Min estimated nightlife density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
             <RangeField label="Min Reliability" value={minVacationReliability} min={0} max={100} step={5} onChange={setMinVacationReliability} suffix="/100" />
             <RangeField label="Max Friction" value={maxArrivalFriction} min={0} max={100} step={5} onChange={setMaxArrivalFriction} suffix="/100" />
             <RangeField label="Max Noise / Chaos" value={maxNoiseChaos} min={0} max={100} step={5} onChange={setMaxNoiseChaos} suffix="/100" />
@@ -644,13 +644,13 @@ function App() {
       {activeTab === 'analytics' && (
         <section className="analytics">
           <div className="chartCard">
-            <h3>Foreign Tourists vs Nightlife Density</h3>
-            <p>Upper-left is target: low foreign share + high bar density. Bubble size = swimmability.</p>
+            <h3>Estimated visitor mix vs estimated nightlife density</h3>
+            <p>Upper-left is target: lower estimated visitor mix + higher estimated density. Bubble size = swimmability proxy.</p>
             <ResponsiveContainer width="100%" height={320}>
               <ScatterChart margin={{ top: 10, right: 10, bottom: 30, left: 0 }}>
                 <CartesianGrid stroke="#e2e8f0" />
-                <XAxis type="number" dataKey="internationalPct" name="Foreign Tourists" unit="%" domain={[0, 50]} stroke="#64748b" />
-                <YAxis type="number" dataKey="nightlifeDensity" name="Nightlife Density" unit="/km²" stroke="#64748b" />
+                <XAxis type="number" dataKey="internationalPct" name="Estimated visitor mix" unit="%" domain={[0, 50]} stroke="#64748b" />
+                <YAxis type="number" dataKey="nightlifeDensity" name="Estimated nightlife density" unit="/km²" stroke="#64748b" />
                 <ZAxis type="number" dataKey="swimmability" range={[60, 240]} />
                 <Tooltip content={<ScatterTooltip />} />
                 <Scatter data={filtered}>
@@ -663,8 +663,8 @@ function App() {
           </div>
 
           <div className="chartCard">
-            <h3>Beach Quality & Water Cleanliness</h3>
-            <p>Comparing physical beach usability and water cleanliness scores.</p>
+            <h3>Beach and water editorial proxies</h3>
+            <p>Comparing editorial beach usability and water-cleanliness proxies. These are not measurements.</p>
             <ResponsiveContainer width="100%" height={320}>
               <BarChart data={filtered.slice(0, 12)} margin={{ top: 10, right: 10, bottom: 50, left: 0 }}>
                 <CartesianGrid stroke="#e2e8f0" />
@@ -680,7 +680,7 @@ function App() {
 
           <div className="chartCard chartCardFull">
             <h3>Monthly Weather Reliability Heatmap</h3>
-            <p>Open-Meteo multi-year climate & marine P90 wave history score per month (0–100).</p>
+            <p>Open-Meteo multi-year climate and marine proxy score per month (0–100).</p>
             <div className="heatmap">
               <div className="heatmapRow">
                 <span className="lbl" />
@@ -715,9 +715,10 @@ function App() {
           <p>
             This dashboard compares Southeast Asian coastal destinations on three primary factors:
           </p>
-          <p>1. <strong>Domestic Atmosphere (22%)</strong>: High local share, low foreign tourist overcrowding.</p>
-          <p>2. <strong>Beach Usability (28%)</strong>: Swimmability, clean water, sand quality, rip safety, evening promenade.</p>
-          <p>3. <strong>Compact Nightlife (40%)</strong>: Nightlife density per km², 10-min walk venues, cluster compactness.</p>
+          <p>1. <strong>Estimated domestic atmosphere (22%)</strong>: Editorial visitor-mix estimate, not foreign-resident data.</p>
+          <p>2. <strong>Beach usability proxy (28%)</strong>: Editorial swimmability, water, sand, safety, and promenade scores.</p>
+          <p>3. <strong>Estimated compact nightlife (40%)</strong>: Structured density, bar-count, and cluster-radius estimates.</p>
+          <p><strong>Important:</strong> Core beach, nightlife, visitor-mix, population, cost, and verdict fields are not a field-level census. Generated airport distances are straight-line distances. Generated OSM values are circular-radius proxies, not walking counts.</p>
         </section>
       )}
     </main>
@@ -784,13 +785,13 @@ function DestinationCard({ city, rank }: { city: City; rank: number }) {
 
       {/* Streamlined Metrics Line */}
       <div className="cardMetrics">
-        <span>👥 Foreigners: <strong>{city.internationalPct}%</strong></span>
-        <span>🏊 Swim: <strong>{city.swimmability}/10</strong></span>
-        <span>✈️ Airport: <strong>{airportEase.label} ({airportEase.dist != null ? `${airportEase.dist}km` : '—'})</strong></span>
-        <span>🍸 Density: <strong>{city.nightlifeDensity}/km²</strong></span>
-        <span>🚶 10m Bars: <strong>{city.barsWithin10MinWalk}</strong></span>
-        <span>💰 Cost: <strong>{money(city.monthlyLocalCostUsd)}</strong></span>
-        <span>☀️ Best: <strong>{formatMonths(vacation?.seasonality.bestMonths)}</strong></span>
+        <span>👥 Estimated visitor mix: <strong>{city.internationalPct}%</strong></span>
+        <span>🏊 Swim proxy: <strong>{city.swimmability}/10</strong></span>
+        <span>✈️ Airport: <strong>{airportEase.label} ({airportEase.dist != null ? `${airportEase.dist}km straight-line` : '—'})</strong></span>
+        <span>🍸 Density estimate: <strong>{city.nightlifeDensity}/km²</strong></span>
+        <span>🚶 Estimated 10m bars: <strong>{city.barsWithin10MinWalk}</strong></span>
+        <span>💰 Cost estimate: <strong>{money(city.monthlyLocalCostUsd)}</strong></span>
+        <span>☀️ Climate proxy best: <strong>{formatMonths(vacation?.seasonality.bestMonths)}</strong></span>
       </div>
 
       <div className="tags">
@@ -801,14 +802,15 @@ function DestinationCard({ city, rank }: { city: City; rank: number }) {
 
       {/* Native Lightweight Details Drawer */}
       <details>
-        <summary>View Evidence & Audit Notes</summary>
+        <summary>View Evidence & Limitations</summary>
         <div className="detailsContent">
-          <p><strong>Nightlife Density:</strong> {city.densityMethod}</p>
+          <p><strong>Evidence status:</strong> Core scores and verdicts are editorial estimates. Generated airport, weather, safety, and OSM fields are proxies and retain their source URLs for review.</p>
+          <p><strong>Nightlife density estimate:</strong> {city.densityMethod}</p>
           <p><strong>Beach Audit:</strong> {city.beachAudit}</p>
           <p><strong>Nightlife Audit:</strong> {city.nightlifeAudit}</p>
-          <p><strong>Beach Walkability:</strong> {city.walkability}/10 | <strong>Clean Water:</strong> {city.waterCleanlinessScore}/10 | <strong>Safety:</strong> {city.currentSafetyScore}/10</p>
+          <p><strong>Walkability estimate:</strong> {city.walkability}/10 | <strong>Clean-water proxy:</strong> {city.waterCleanlinessScore}/10 | <strong>Safety proxy:</strong> {city.currentSafetyScore}/10</p>
           {vacation?.arrival.nearestAirport && (
-            <p><strong>Airport:</strong> {vacation.arrival.nearestAirport} ({vacation.arrival.airportDistanceKm}km) | <strong>Advisory:</strong> {vacation.arrival.safetyAdvisory?.level ? `US Level ${vacation.arrival.safetyAdvisory.level}` : '—'}</p>
+            <p><strong>Airport:</strong> {vacation.arrival.nearestAirport} ({vacation.arrival.airportDistanceKm}km straight-line) | <strong>Transfer:</strong> {vacation.arrival.transferTimeStatus} | <strong>Advisory:</strong> {vacation.arrival.safetyAdvisory?.level ? `US Level ${vacation.arrival.safetyAdvisory.level}` : '—'}</p>
           )}
 
           <div className="links">
@@ -830,7 +832,7 @@ function ScatterTooltip({ active, payload }: any) {
   return (
     <div style={{ background: '#ffffff', border: '1px solid #cbd5e1', padding: '8px 12px', borderRadius: 8, fontSize: 12 }}>
       <strong>{city.city}</strong> ({city.country})<br />
-      Foreign Tourists: {city.internationalPct}% | Density: {city.nightlifeDensity}/km²<br />
+      Estimated visitor mix: {city.internationalPct}% | Estimated density: {city.nightlifeDensity}/km²<br />
       Fit Score: {scoreCity(city)}/100
     </div>
   );

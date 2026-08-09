@@ -28,15 +28,16 @@ COUNTRY_SLUGS = {
     'Thailand': 'thailand', 'Vietnam': 'vietnam', 'Malaysia': 'malaysia', 'Philippines': 'philippines',
     'Indonesia': 'indonesia', 'Cambodia': 'cambodia', 'Myanmar': 'myanmar-burma'
 }
-# Parsed from US State Dept travel advisories page during generation; fallback values kept explicit and sourced to that page.
+# Parsed from US State Dept travel advisories page during generation. If the page cannot be parsed,
+# keep the advisory unknown rather than publishing a stale country-level fallback as current data.
 FALLBACK_US_ADVISORY = {
-    'Thailand': (2, 'Exercise increased caution'),
-    'Vietnam': (1, 'Exercise normal precautions'),
-    'Malaysia': (1, 'Exercise normal precautions'),
-    'Indonesia': (2, 'Exercise increased caution'),
-    'Philippines': (2, 'Exercise increased caution'),
-    'Cambodia': (2, 'Exercise increased caution'),
-    'Myanmar': (4, 'Do not travel'),
+    'Thailand': (None, 'Unknown'),
+    'Vietnam': (None, 'Unknown'),
+    'Malaysia': (None, 'Unknown'),
+    'Indonesia': (None, 'Unknown'),
+    'Philippines': (None, 'Unknown'),
+    'Cambodia': (None, 'Unknown'),
+    'Myanmar': (None, 'Unknown'),
 }
 
 ALIASES = {
@@ -224,7 +225,8 @@ def seasonality(city_id, lat, lon):
     return {'bestMonths':best,'shoulderMonths':shoulder,'avoidMonths':avoid,'monthly':monthly,'generatedAt':TODAY,'years':[2021,2025],'weatherSourceUrl':wurl,'marineSourceUrl':murl,'method':'Open-Meteo historical daily weather plus marine daily wave-height max/sea-surface temperature; deterministic proxy scoring.'}
 
 def load_airports():
-    txt=req_text('https://davidmegginson.github.io/ourairports-data/airports.csv','ourairports-airports.csv',timeout=60)
+    # Airport service status changes. Do not reuse an unversioned ignored cache for this claim.
+    txt=req_text('https://davidmegginson.github.io/ourairports-data/airports.csv',None,timeout=60)
     rows=[]
     for r in csv.DictReader(txt.splitlines()):
         if not r.get('iata_code'): continue
