@@ -20,11 +20,16 @@ import {
   Footprints,
   Info,
   MapPin,
+  Moon,
   Plane,
   RotateCcw,
   Search,
+  ShieldCheck,
   SlidersHorizontal,
+  Sparkles,
+  Sun,
   Waves,
+  Zap,
 } from 'lucide-react';
 import { cities, type City } from './data';
 import { vacationDataByKey, type VacationRecord } from './vacationData';
@@ -40,6 +45,9 @@ const verdictColors: Record<City['verdict'], string> = {
 const countries = ['All', ...Array.from(new Set(cities.map((c) => c.country))).sort()];
 const verdicts = ['Viable only', 'All', 'top pick', 'possible', 'weak fit', 'reject'] as const;
 const locationTypes = ['All', 'Island Only', 'Mainland Only'] as const;
+const safetyOptions = ['All', 'Level 1 Only', 'Level 1 & 2'] as const;
+
+type PresetFilter = 'all' | 'crystal' | 'island-hopping' | 'surf' | 'quiet' | 'late-night' | 'budget';
 
 const verdictRank: Record<City['verdict'], number> = {
   'top pick': 0,
@@ -154,6 +162,7 @@ function App() {
   const [country, setCountry] = useState('All');
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
   const [locationType, setLocationType] = useState<(typeof locationTypes)[number]>('All');
+  const [preset, setPreset] = useState<PresetFilter>('all');
   const [maxInternational, setMaxInternational] = useState(80);
   const [minSwimmability, setMinSwimmability] = useState(0);
   const [maxAirportDistance, setMaxAirportDistance] = useState(200);
@@ -161,6 +170,7 @@ function App() {
 
   // Advanced Drawer Filters
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [safetyFilter, setSafetyFilter] = useState<(typeof safetyOptions)[number]>('All');
   const [maxMonthlyCost, setMaxMonthlyCost] = useState(1500);
   const [minWalkability, setMinWalkability] = useState(0);
   const [minBarsWithin10Walk, setMinBarsWithin10Walk] = useState(0);
@@ -180,6 +190,8 @@ function App() {
     setCountry('All');
     setVerdict('All');
     setLocationType('All');
+    setPreset('all');
+    setSafetyFilter('All');
     setMaxInternational(80);
     setMinSwimmability(0);
     setMaxAirportDistance(200);
@@ -201,6 +213,7 @@ function App() {
 
   const activeAdvancedCount = useMemo(() => {
     let count = 0;
+    if (safetyFilter !== 'All') count++;
     if (maxAirportDistance < 200) count++;
     if (maxMonthlyCost < 1500) count++;
     if (minWalkability > 0) count++;
@@ -217,6 +230,7 @@ function App() {
     if (minDayTripScore > 0) count++;
     return count;
   }, [
+    safetyFilter,
     maxAirportDistance,
     maxMonthlyCost,
     minWalkability,
@@ -256,6 +270,21 @@ function App() {
         if (locationType === 'Mainland Only') return !isIsland;
         return true;
       })
+      .filter((c) => {
+        if (preset === 'crystal') return c.swimmability >= 8 && c.waterCleanlinessScore >= 8;
+        if (preset === 'island-hopping') return c.tags.includes('island-hopping') || (getVacation(c)?.dayTripMetrics.dayTripScore ?? 0) >= 65;
+        if (preset === 'surf') return c.tags.includes('surf-culture') || c.tags.includes('kitesurfing');
+        if (preset === 'quiet') return (getVacation(c)?.noiseChaosMetrics.noiseChaosScore ?? 50) <= 40;
+        if (preset === 'late-night') return c.lateNightVenuesCount >= 18;
+        if (preset === 'budget') return c.monthlyLocalCostUsd <= 750;
+        return true;
+      })
+      .filter((c) => {
+        const level = getVacation(c)?.arrival.safetyAdvisory?.level;
+        if (safetyFilter === 'Level 1 Only') return level === 1;
+        if (safetyFilter === 'Level 1 & 2') return level == null || level <= 2;
+        return true;
+      })
       .filter((c) => c.internationalPct <= maxInternational)
       .filter((c) => c.swimmability >= minSwimmability)
       .filter((c) => c.monthlyLocalCostUsd <= maxMonthlyCost)
@@ -287,6 +316,8 @@ function App() {
     country,
     verdict,
     locationType,
+    preset,
+    safetyFilter,
     maxInternational,
     minSwimmability,
     maxMonthlyCost,
@@ -379,6 +410,53 @@ function App() {
 
       {/* Main Controls (Filter Panel) */}
       <section className="controlPanel">
+        {/* Quick Vibe Presets */}
+        <div className="presetRow">
+          <span className="presetLabel">Vibe Presets:</span>
+          <button
+            className={`presetPillBtn ${preset === 'all' ? 'active' : ''}`}
+            onClick={() => setPreset('all')}
+          >
+            <Sparkles size={13} /> All Vibe Modes
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'crystal' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'crystal' ? 'all' : 'crystal')}
+          >
+            🌊 Crystal Water
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'island-hopping' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'island-hopping' ? 'all' : 'island-hopping')}
+          >
+            🏝️ Island Hopping
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'surf' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'surf' ? 'all' : 'surf')}
+          >
+            🏄 Surf & Waves
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'quiet' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'quiet' ? 'all' : 'quiet')}
+          >
+            🔇 Peaceful & Quiet
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'late-night' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'late-night' ? 'all' : 'late-night')}
+          >
+            🔥 Late-Night Party
+          </button>
+          <button
+            className={`presetPillBtn ${preset === 'budget' ? 'active' : ''}`}
+            onClick={() => setPreset(preset === 'budget' ? 'all' : 'budget')}
+          >
+            💰 Budget (&le;$750/mo)
+          </button>
+        </div>
+
         <div className="searchBar">
           <Search className="searchIcon" />
           <input
@@ -465,14 +543,22 @@ function App() {
 
         {showAdvanced && (
           <div className="advancedDrawer">
+            <div className="filterGroup">
+              <label>Safety Advisory Level</label>
+              <select className="selectInput" value={safetyFilter} onChange={(e) => setSafetyFilter(e.target.value as typeof safetyFilter)}>
+                {safetyOptions.map((s) => (
+                  <option key={s}>{s}</option>
+                ))}
+              </select>
+            </div>
             <RangeFilter label="Max Monthly Budget" value={maxMonthlyCost} min={400} max={1500} step={50} onChange={setMaxMonthlyCost} prefix="$" />
             <RangeFilter label="Min Beach Walkability" value={minWalkability} min={0} max={10} step={0.5} onChange={setMinWalkability} suffix="/10" />
             <RangeFilter label="Max Airport Distance" value={maxAirportDistance} min={10} max={200} step={10} onChange={setMaxAirportDistance} suffix="km" />
             <RangeFilter label="Min 10m-Walk Bars" value={minBarsWithin10Walk} min={0} max={60} step={5} onChange={setMinBarsWithin10Walk} />
+            <RangeFilter label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
             <RangeFilter label="Min Evening Beach Life" value={minEveningBeachLife} min={0} max={10} step={0.5} onChange={setMinEveningBeachLife} suffix="/10" />
             <RangeFilter label="Min Clean Water" value={minWaterCleanliness} min={0} max={10} step={0.5} onChange={setMinWaterCleanliness} suffix="/10" />
             <RangeFilter label="Max Bar Cluster Radius" value={maxClusterRadius} min={400} max={3500} step={100} onChange={setMaxClusterRadius} suffix="m" />
-            <RangeFilter label="Min Late-Night Venues" value={minLateNightVenues} min={0} max={120} step={5} onChange={setMinLateNightVenues} />
             <RangeFilter label="Min Nightlife Density" value={minNightlifeDensity} min={0} max={900} step={50} onChange={setMinNightlifeDensity} suffix="/km²" />
             <RangeFilter label="Min Vacation Reliability" value={minVacationReliability} min={0} max={100} step={5} onChange={setMinVacationReliability} suffix="/100" />
             <RangeFilter label="Max Arrival Friction" value={maxArrivalFriction} min={0} max={100} step={5} onChange={setMaxArrivalFriction} suffix="/100" />
