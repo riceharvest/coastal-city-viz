@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import {
   Bar,
   BarChart,
@@ -19,6 +21,7 @@ import {
   Compass,
   Footprints,
   Info,
+  Map as MapIcon,
   MapPin,
   Plane,
   RotateCcw,
@@ -152,8 +155,85 @@ function reliabilityColor(score: number) {
   return 'rgba(239, 68, 68, 0.8)';
 }
 
+function MapView({ cities }: { cities: City[] }) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const layerGroupRef = useRef<L.LayerGroup | null>(null);
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    if (!mapRef.current) {
+      const map = L.map(mapContainerRef.current, {
+        center: [10.0, 108.0],
+        zoom: 5,
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18,
+      }).addTo(map);
+
+      layerGroupRef.current = L.layerGroup().addTo(map);
+      mapRef.current = map;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mapRef.current || !layerGroupRef.current) return;
+
+    layerGroupRef.current.clearLayers();
+    const bounds: [number, number][] = [];
+
+    cities.forEach((city) => {
+      const vacation = getVacation(city);
+      if (!vacation?.coordinate?.lat || !vacation?.coordinate?.lon) return;
+
+      const lat = vacation.coordinate.lat;
+      const lon = vacation.coordinate.lon;
+      bounds.push([lat, lon]);
+
+      const color = verdictColors[city.verdict];
+      const fitScore = scoreCity(city);
+
+      const icon = L.divIcon({
+        className: 'custom-map-pin',
+        html: `<div style="background-color: ${color}; width: 26px; height: 26px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px;">${fitScore}</div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+      });
+
+      const marker = L.marker([lat, lon], { icon });
+
+      const popupContent = `
+        <div style="font-family: system-ui, sans-serif; padding: 4px; min-width: 180px;">
+          <div style="font-weight: 800; font-size: 15px; color: #0f172a;">${city.city}</div>
+          <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">${city.country} · ${city.district}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="background: ${color}20; color: ${color}; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 999px; text-transform: uppercase;">${city.verdict}</span>
+            <strong style="color: #0284c7; font-size: 14px;">Fit ${fitScore}/100</strong>
+          </div>
+          <div style="font-size: 11px; color: #334155; line-height: 1.5; border-top: 1px solid #e2e8f0; padding-top: 6px;">
+            👥 Foreign: <b>${city.internationalPct}%</b> | 🏊 Swim: <b>${city.swimmability}/10</b><br/>
+            🍸 Density: <b>${city.nightlifeDensity}/km²</b> | 💰 <b>${money(city.monthlyLocalCostUsd)}</b>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent);
+      layerGroupRef.current?.addLayer(marker);
+    });
+
+    if (bounds.length > 0) {
+      mapRef.current.fitBounds(bounds, { padding: [40, 40], maxZoom: 9 });
+    }
+  }, [cities]);
+
+  return <div ref={mapContainerRef} className="mapContainer" />;
+}
+
 function App() {
-  const [activeTab, setActiveTab] = useState<'explorer' | 'analytics' | 'audit'>('explorer');
+  const [activeTab, setActiveTab] = useState<'explorer' | 'map' | 'analytics' | 'audit'>('explorer');
   const [searchQuery, setSearchQuery] = useState('');
   const [country, setCountry] = useState('All');
   const [verdict, setVerdict] = useState<(typeof verdicts)[number]>('All');
@@ -362,6 +442,12 @@ function App() {
             <Compass size={14} /> Explorer
           </button>
           <button
+            className={activeTab === 'map' ? 'active' : ''}
+            onClick={() => setActiveTab('map')}
+          >
+            <MapIcon size={14} /> 2D Map
+          </button>
+          <button
             className={activeTab === 'analytics' ? 'active' : ''}
             onClick={() => setActiveTab('analytics')}
           >
@@ -532,6 +618,13 @@ function App() {
           </div>
         )}
       </section>
+
+      {/* 2D Map Tab View */}
+      {activeTab === 'map' && (
+        <section>
+          <MapView cities={filtered} />
+        </section>
+      )}
 
       {/* Destination List */}
       {activeTab === 'explorer' && (
